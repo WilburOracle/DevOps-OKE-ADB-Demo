@@ -1,0 +1,64 @@
+version: 0.1
+component: build
+timeoutInSeconds: 3600
+shell: bash
+failImmediatelyOnError: true
+env:
+  variables:
+    # 数据库连接信息将从环境变量读取
+    DB_USER: "${DB_USER}"
+    DB_PASSWORD: "${DB_PASSWORD}"
+    DB_DSN: "${DB_DSN}"
+    
+steps:
+  - type: Command
+    name: "Connect to OCI Autonomous Database and execute SQL script"
+    shell: bash
+    timeoutInSeconds: 600
+    failImmediatelyOnError: true
+    command: |
+      # 安装Oracle Instant Client (如果需要)
+      echo "正在安装Oracle Instant Client..."
+      yum install -y oracle-instantclient-release-el7
+      yum install -y oracle-instantclient-basic oracle-instantclient-sqlplus
+      
+      # 配置环境变量
+      export ORACLE_HOME=/usr/lib/oracle/19.15/client64
+      export PATH=$ORACLE_HOME/bin:$PATH
+      export LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH
+      
+      # 验证sqlplus是否安装成功
+      which sqlplus || { echo "sqlplus未安装成功"; exit 1; }
+      
+      # 连接数据库并执行SQL脚本
+      echo "正在连接数据库并执行SQL脚本..."
+      echo "@app/sql/current_version_sql.sql" | sqlplus -s ${DB_USER}/${DB_PASSWORD}@${DB_DSN}
+      
+      if [ $? -eq 0 ]; then
+        echo "SQL脚本执行成功"
+      else
+        echo "SQL脚本执行失败"
+        exit 1
+      fi
+      
+  - type: Command
+    name: "Verification step"
+    shell: bash
+    timeoutInSeconds: 300
+    failImmediatelyOnError: true
+    command: |
+      echo "验证数据库操作..."
+      # 可以添加额外的验证步骤，比如检查表是否创建成功
+      echo "SELECT '表已创建: ' || table_name FROM user_tables WHERE table_name IN ('ACCOUNTS', 'APP_INFO');" | sqlplus -s ${DB_USER}/${DB_PASSWORD}@${DB_DSN}
+      
+      if [ $? -eq 0 ]; then
+        echo "数据库验证成功"
+      else
+        echo "数据库验证失败"
+        exit 1
+      fi
+      
+outputArtifacts:
+  - name: "database-initialization-log"
+    type: "GENERIC_ARTIFACT"
+    location: "/tmp/db_init.log"
