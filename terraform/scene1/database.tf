@@ -107,9 +107,9 @@ resource oci_database_autonomous_database export_ADB-Demo {
   #is_access_control_enabled = <<Optional value not found in discovery>>
   is_auto_scaling_enabled             = "false"
   is_auto_scaling_for_storage_enabled = "false"
-  #is_backup_retention_locked = <<Optional value not found in discovery>>
-  is_data_guard_enabled = "false"
-  is_dedicated          = "false"
+  is_backup_retention_locked          = "false"
+  is_data_guard_enabled               = "false"
+  is_dedicated                        = "false"
   #is_dev_tier = <<Optional value not found in discovery>>
   #is_disable_db_version_upgrade_schedule = <<Optional value not found in discovery>>
   #is_disconnect_peer = <<Optional value not found in discovery>>

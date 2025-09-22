@@ -57,6 +57,65 @@ resource oci_core_internet_gateway export_oke-igw-quick-OKE-Demo-2e4514f35 {
   vcn_id = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.id
 }
 
+resource oci_core_public_ip export_Floating-Public-IP-for-cluster-ocid1-cluster-oc1-iad-aaaaaaaab62oyt34fwrclxfsxgjl6wjzi3mmyfgz45abwliq4cgnjnagsaqq {
+  compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
+  defined_tags = {
+    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
+    "default_tags.CreatedOn" = "2025-09-19T08:20:50.554Z"
+  }
+  display_name = "Floating Public IP for cluster ocid1.cluster.oc1.iad.aaaaaaaab62oyt34fwrclxfsxgjl6wjzi3mmyfgz45abwliq4cgnjnagsaqq"
+  freeform_tags = {
+  }
+  lifetime      = "RESERVED"
+  private_ip_id = oci_core_private_ip.export_Service-VNIC-for-cluster-ocid1-cluster-oc1-iad-aaaaaaaab62oyt34fwrclxfsxgjl6wjzi3mmyfgz45abwliq4cgnjnagsaqq.id
+  #public_ip_pool_id = <<Optional value not found in discovery>>
+}
+
+resource oci_core_route_table export_oke-private-routetable-OKE-Demo-2e4514f35 {
+  compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
+  defined_tags = {
+    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
+    "default_tags.CreatedOn" = "2025-09-19T08:19:21.706Z"
+  }
+  display_name = "oke-private-routetable-OKE-Demo-2e4514f35"
+  freeform_tags = {
+  }
+  route_rules {
+    description       = "traffic to the internet"
+    destination       = "0.0.0.0/0"
+    destination_type  = "CIDR_BLOCK"
+    network_entity_id = oci_core_nat_gateway.export_oke-ngw-quick-OKE-Demo-2e4514f35.id
+    route_type        = "STATIC"
+  }
+  route_rules {
+    description       = "traffic to OCI services"
+    destination       = "all-iad-services-in-oracle-services-network"
+    destination_type  = "SERVICE_CIDR_BLOCK"
+    network_entity_id = oci_core_service_gateway.export_oke-sgw-quick-OKE-Demo-2e4514f35.id
+    route_type        = "STATIC"
+  }
+  vcn_id = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.id
+}
+
+resource oci_core_default_route_table export_oke-public-routetable-OKE-Demo-2e4514f35 {
+  compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
+  defined_tags = {
+    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
+    "default_tags.CreatedOn" = "2025-09-19T08:19:16.865Z"
+  }
+  display_name = "oke-public-routetable-OKE-Demo-2e4514f35"
+  freeform_tags = {
+  }
+  manage_default_resource_id = "ocid1.routetable.oc1.iad.aaaaaaaazv3zkcksuzfeewnaoww55ejjghib62ddxy44oht7xpticc77lhoq"
+  route_rules {
+    description       = "traffic to/from internet"
+    destination       = "0.0.0.0/0"
+    destination_type  = "CIDR_BLOCK"
+    network_entity_id = oci_core_internet_gateway.export_oke-igw-quick-OKE-Demo-2e4514f35.id
+    route_type        = "STATIC"
+  }
+}
+
 resource oci_core_subnet export_private-subnet {
   #availability_domain = <<Optional value not found in discovery>>
   cidr_block     = "10.0.10.0/23"
@@ -100,7 +159,7 @@ resource oci_core_subnet export_oke-api-subnet {
   ]
   prohibit_internet_ingress  = "false"
   prohibit_public_ip_on_vnic = "false"
-  route_table_id             = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.default_route_table_id
+  route_table_id             = oci_core_default_route_table.export_oke-public-routetable-OKE-Demo-2e4514f35.id
   security_list_ids = [
     oci_core_security_list.export_oke-k8sApiEndpoint-quick-OKE-Demo-2e4514f35.id,
   ]
@@ -125,93 +184,11 @@ resource oci_core_subnet export_oke-svclb-subnet {
   ]
   prohibit_internet_ingress  = "false"
   prohibit_public_ip_on_vnic = "false"
-  route_table_id             = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.default_route_table_id
+  route_table_id             = oci_core_default_route_table.export_oke-public-routetable-OKE-Demo-2e4514f35.id
   security_list_ids = [
-    oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.default_security_list_id,
+    oci_core_default_security_list.export_oke-svclbseclist-quick-OKE-Demo-2e4514f35.id,
   ]
   vcn_id = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.id
-}
-
-resource oci_core_public_ip export_Floating-Public-IP-for-cluster-ocid1-cluster-oc1-iad-aaaaaaaab62oyt34fwrclxfsxgjl6wjzi3mmyfgz45abwliq4cgnjnagsaqq {
-  compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
-  defined_tags = {
-    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
-    "default_tags.CreatedOn" = "2025-09-19T08:20:50.554Z"
-  }
-  display_name = "Floating Public IP for cluster ocid1.cluster.oc1.iad.aaaaaaaab62oyt34fwrclxfsxgjl6wjzi3mmyfgz45abwliq4cgnjnagsaqq"
-  freeform_tags = {
-  }
-  lifetime      = "RESERVED"
-  private_ip_id = oci_core_private_ip.export_Service-VNIC-for-cluster-ocid1-cluster-oc1-iad-aaaaaaaab62oyt34fwrclxfsxgjl6wjzi3mmyfgz45abwliq4cgnjnagsaqq.id
-  #public_ip_pool_id = <<Optional value not found in discovery>>
-}
-
-resource oci_core_vcn export_oke-vcn-quick-OKE-Demo-2e4514f35 {
-  #byoipv6cidr_details = <<Optional value not found in discovery>>
-  #cidr_block = <<Optional value not found in discovery>>
-  cidr_blocks = [
-    "10.0.0.0/16",
-  ]
-  compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
-  defined_tags = {
-    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
-    "default_tags.CreatedOn" = "2025-09-19T08:19:16.865Z"
-  }
-  display_name = "oke-vcn-quick-OKE-Demo-2e4514f35"
-  dns_label    = "okedemo"
-  freeform_tags = {
-  }
-  ipv6private_cidr_blocks = [
-  ]
-  #is_ipv6enabled = <<Optional value not found in discovery>>
-  #is_oracle_gua_allocation_enabled = <<Optional value not found in discovery>>
-  security_attributes = {
-  }
-}
-
-resource oci_core_route_table export_oke-private-routetable-OKE-Demo-2e4514f35 {
-  compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
-  defined_tags = {
-    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
-    "default_tags.CreatedOn" = "2025-09-19T08:19:21.706Z"
-  }
-  display_name = "oke-private-routetable-OKE-Demo-2e4514f35"
-  freeform_tags = {
-  }
-  route_rules {
-    description       = "traffic to the internet"
-    destination       = "0.0.0.0/0"
-    destination_type  = "CIDR_BLOCK"
-    network_entity_id = oci_core_nat_gateway.export_oke-ngw-quick-OKE-Demo-2e4514f35.id
-    route_type        = "STATIC"
-  }
-  route_rules {
-    description       = "traffic to OCI services"
-    destination       = "all-iad-services-in-oracle-services-network"
-    destination_type  = "SERVICE_CIDR_BLOCK"
-    network_entity_id = oci_core_service_gateway.export_oke-sgw-quick-OKE-Demo-2e4514f35.id
-    route_type        = "STATIC"
-  }
-  vcn_id = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.id
-}
-
-resource oci_core_default_route_table export_oke-public-routetable-OKE-Demo-2e4514f35 {
-  compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
-  defined_tags = {
-    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
-    "default_tags.CreatedOn" = "2025-09-19T08:19:16.865Z"
-  }
-  display_name = "oke-public-routetable-OKE-Demo-2e4514f35"
-  freeform_tags = {
-  }
-  manage_default_resource_id = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.default_route_table_id
-  route_rules {
-    description       = "traffic to/from internet"
-    destination       = "0.0.0.0/0"
-    destination_type  = "CIDR_BLOCK"
-    network_entity_id = oci_core_internet_gateway.export_oke-igw-quick-OKE-Demo-2e4514f35.id
-    route_type        = "STATIC"
-  }
 }
 
 resource oci_core_security_list export_oke-nodeseclist-quick-OKE-Demo-2e4514f35 {
@@ -474,7 +451,30 @@ resource oci_core_default_security_list export_oke-svclbseclist-quick-OKE-Demo-2
   display_name = "oke-svclbseclist-quick-OKE-Demo-2e4514f35"
   freeform_tags = {
   }
-  manage_default_resource_id = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.default_security_list_id
+  manage_default_resource_id = "ocid1.securitylist.oc1.iad.aaaaaaaae3kifsfrd2a5usdhm7cav34y5dexa46xa6dxk645frttbc57iz3q"
+}
+
+resource oci_core_vcn export_oke-vcn-quick-OKE-Demo-2e4514f35 {
+  #byoipv6cidr_details = <<Optional value not found in discovery>>
+  #cidr_block = <<Optional value not found in discovery>>
+  cidr_blocks = [
+    "10.0.0.0/16",
+  ]
+  compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
+  defined_tags = {
+    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
+    "default_tags.CreatedOn" = "2025-09-19T08:19:16.865Z"
+  }
+  display_name = "oke-vcn-quick-OKE-Demo-2e4514f35"
+  dns_label    = "okedemo"
+  freeform_tags = {
+  }
+  ipv6private_cidr_blocks = [
+  ]
+  #is_ipv6enabled = <<Optional value not found in discovery>>
+  #is_oracle_gua_allocation_enabled = <<Optional value not found in discovery>>
+  security_attributes = {
+  }
 }
 
 resource oci_core_private_ip export_PE_us-ashburn-1_49e278d5-888f-4c37-91b1-5c0390bff487 {
