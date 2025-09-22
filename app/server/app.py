@@ -16,7 +16,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # 数据库配置
 DB_USER = os.environ.get('DB_USER', 'admin')
-DB_PASSWORD = os.environ.get('DB_PASSWORD', 'Welcome12345')
+DB_PASSWORD = os.environ.get('DB_PASSWORD', 'Oracle1234567')
 DB_DSN = os.environ.get('DB_DSN', 'adb_connection_string')
 
 # 数据库连接池
