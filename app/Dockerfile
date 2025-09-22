@@ -5,6 +5,7 @@ FROM python:3.10-slim
 WORKDIR /app
 
 # 更新apt并安装必要的系统依赖
+# 安装gcc和g++是因为oracledb库在安装过程中可能需要编译部分组件
 RUN apt-get update && \n    apt-get install -y --no-install-recommends gcc g++ && \n    rm -rf /var/lib/apt/lists/*
 
 # 复制requirements.txt文件
@@ -17,16 +18,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY server/ .
 
 # 复制静态文件
-COPY --chown=nobody:nogroup server/static/ /app/static/
-
-# 创建非root用户运行应用
-RUN groupadd -r appgroup && useradd -r -g appgroup appuser
-
-# 更改文件所有权
-RUN chown -R appuser:appgroup /app
-
-# 切换到非root用户
-USER appuser
+COPY server/static/ /app/static/
 
 # 暴露应用端口
 EXPOSE 8000
