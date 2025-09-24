@@ -62,3 +62,4 @@ VALUES ('user4', 'user4@example.com', '产品部', 'active');
 
 -- 提交事务
 COMMIT;
+exit;

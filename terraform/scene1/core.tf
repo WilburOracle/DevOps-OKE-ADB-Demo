@@ -57,63 +57,43 @@ resource oci_core_internet_gateway export_oke-igw-quick-OKE-Demo-2e4514f35 {
   vcn_id = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.id
 }
 
-resource oci_core_public_ip export_Floating-Public-IP-for-cluster-ocid1-cluster-oc1-iad-aaaaaaaab62oyt34fwrclxfsxgjl6wjzi3mmyfgz45abwliq4cgnjnagsaqq {
+resource oci_core_public_ip export_Floating-Public-IP-for-cluster-ocid1-cluster-oc1-iad-aaaaaaaallehmi3lsogtycadllm2yj5ftr6ej2ywqymhxhywccrfols6nacq {
   compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
   defined_tags = {
     "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
-    "default_tags.CreatedOn" = "2025-09-19T08:20:50.554Z"
+    "default_tags.CreatedOn" = "2025-09-23T16:45:54.153Z"
   }
-  display_name = "Floating Public IP for cluster ocid1.cluster.oc1.iad.aaaaaaaab62oyt34fwrclxfsxgjl6wjzi3mmyfgz45abwliq4cgnjnagsaqq"
+  display_name = "Floating Public IP for cluster ocid1.cluster.oc1.iad.aaaaaaaallehmi3lsogtycadllm2yj5ftr6ej2ywqymhxhywccrfols6nacq"
   freeform_tags = {
   }
   lifetime      = "RESERVED"
-  private_ip_id = oci_core_private_ip.export_Service-VNIC-for-cluster-ocid1-cluster-oc1-iad-aaaaaaaab62oyt34fwrclxfsxgjl6wjzi3mmyfgz45abwliq4cgnjnagsaqq.id
+  private_ip_id = oci_core_private_ip.export_Service-VNIC-for-cluster-ocid1-cluster-oc1-iad-aaaaaaaallehmi3lsogtycadllm2yj5ftr6ej2ywqymhxhywccrfols6nacq.id
   #public_ip_pool_id = <<Optional value not found in discovery>>
 }
 
-resource oci_core_route_table export_oke-private-routetable-OKE-Demo-2e4514f35 {
+resource oci_core_subnet export_vm-test_1 {
+  #availability_domain = <<Optional value not found in discovery>>
+  cidr_block     = "10.0.50.0/24"
   compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
   defined_tags = {
     "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
-    "default_tags.CreatedOn" = "2025-09-19T08:19:21.706Z"
+    "default_tags.CreatedOn" = "2025-09-22T12:34:55.939Z"
   }
-  display_name = "oke-private-routetable-OKE-Demo-2e4514f35"
+  dhcp_options_id = oci_core_default_dhcp_options.export_Default-DHCP-Options-for-oke-vcn-quick-OKE-Demo-2e4514f35.id
+  display_name    = "vm-test"
+  dns_label       = "vmtest"
   freeform_tags = {
   }
-  route_rules {
-    description       = "traffic to the internet"
-    destination       = "0.0.0.0/0"
-    destination_type  = "CIDR_BLOCK"
-    network_entity_id = oci_core_nat_gateway.export_oke-ngw-quick-OKE-Demo-2e4514f35.id
-    route_type        = "STATIC"
-  }
-  route_rules {
-    description       = "traffic to OCI services"
-    destination       = "all-iad-services-in-oracle-services-network"
-    destination_type  = "SERVICE_CIDR_BLOCK"
-    network_entity_id = oci_core_service_gateway.export_oke-sgw-quick-OKE-Demo-2e4514f35.id
-    route_type        = "STATIC"
-  }
+  #ipv6cidr_block = <<Optional value not found in discovery>>
+  ipv6cidr_blocks = [
+  ]
+  prohibit_internet_ingress  = "false"
+  prohibit_public_ip_on_vnic = "false"
+  route_table_id             = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.default_route_table_id
+  security_list_ids = [
+    oci_core_security_list.export_vm-test.id,
+  ]
   vcn_id = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.id
-}
-
-resource oci_core_default_route_table export_oke-public-routetable-OKE-Demo-2e4514f35 {
-  compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
-  defined_tags = {
-    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
-    "default_tags.CreatedOn" = "2025-09-19T08:19:16.865Z"
-  }
-  display_name = "oke-public-routetable-OKE-Demo-2e4514f35"
-  freeform_tags = {
-  }
-  manage_default_resource_id = "ocid1.routetable.oc1.iad.aaaaaaaazv3zkcksuzfeewnaoww55ejjghib62ddxy44oht7xpticc77lhoq"
-  route_rules {
-    description       = "traffic to/from internet"
-    destination       = "0.0.0.0/0"
-    destination_type  = "CIDR_BLOCK"
-    network_entity_id = oci_core_internet_gateway.export_oke-igw-quick-OKE-Demo-2e4514f35.id
-    route_type        = "STATIC"
-  }
 }
 
 resource oci_core_subnet export_private-subnet {
@@ -159,7 +139,7 @@ resource oci_core_subnet export_oke-api-subnet {
   ]
   prohibit_internet_ingress  = "false"
   prohibit_public_ip_on_vnic = "false"
-  route_table_id             = oci_core_default_route_table.export_oke-public-routetable-OKE-Demo-2e4514f35.id
+  route_table_id             = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.default_route_table_id
   security_list_ids = [
     oci_core_security_list.export_oke-k8sApiEndpoint-quick-OKE-Demo-2e4514f35.id,
   ]
@@ -184,10 +164,145 @@ resource oci_core_subnet export_oke-svclb-subnet {
   ]
   prohibit_internet_ingress  = "false"
   prohibit_public_ip_on_vnic = "false"
-  route_table_id             = oci_core_default_route_table.export_oke-public-routetable-OKE-Demo-2e4514f35.id
+  route_table_id             = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.default_route_table_id
   security_list_ids = [
-    oci_core_default_security_list.export_oke-svclbseclist-quick-OKE-Demo-2e4514f35.id,
+    oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.default_security_list_id,
   ]
+  vcn_id = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.id
+}
+
+resource oci_core_vcn export_oke-vcn-quick-OKE-Demo-2e4514f35 {
+  #byoipv6cidr_details = <<Optional value not found in discovery>>
+  #cidr_block = <<Optional value not found in discovery>>
+  cidr_blocks = [
+    "10.0.0.0/16",
+  ]
+  compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
+  defined_tags = {
+    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
+    "default_tags.CreatedOn" = "2025-09-19T08:19:16.865Z"
+  }
+  display_name = "oke-vcn-quick-OKE-Demo-2e4514f35"
+  dns_label    = "okedemo"
+  freeform_tags = {
+  }
+  ipv6private_cidr_blocks = [
+  ]
+  #is_ipv6enabled = <<Optional value not found in discovery>>
+  #is_oracle_gua_allocation_enabled = <<Optional value not found in discovery>>
+  security_attributes = {
+  }
+}
+
+resource oci_core_route_table export_oke-private-routetable-OKE-Demo-2e4514f35 {
+  compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
+  defined_tags = {
+    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
+    "default_tags.CreatedOn" = "2025-09-19T08:19:21.706Z"
+  }
+  display_name = "oke-private-routetable-OKE-Demo-2e4514f35"
+  freeform_tags = {
+  }
+  route_rules {
+    description       = "traffic to the internet"
+    destination       = "0.0.0.0/0"
+    destination_type  = "CIDR_BLOCK"
+    network_entity_id = oci_core_nat_gateway.export_oke-ngw-quick-OKE-Demo-2e4514f35.id
+    route_type        = "STATIC"
+  }
+  route_rules {
+    description       = "traffic to OCI services"
+    destination       = "all-iad-services-in-oracle-services-network"
+    destination_type  = "SERVICE_CIDR_BLOCK"
+    network_entity_id = oci_core_service_gateway.export_oke-sgw-quick-OKE-Demo-2e4514f35.id
+    route_type        = "STATIC"
+  }
+  vcn_id = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.id
+}
+
+resource oci_core_default_route_table export_oke-public-routetable-OKE-Demo-2e4514f35 {
+  compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
+  defined_tags = {
+    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
+    "default_tags.CreatedOn" = "2025-09-19T08:19:16.865Z"
+  }
+  display_name = "oke-public-routetable-OKE-Demo-2e4514f35"
+  freeform_tags = {
+  }
+  manage_default_resource_id = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.default_route_table_id
+  route_rules {
+    description       = "traffic to/from internet"
+    destination       = "0.0.0.0/0"
+    destination_type  = "CIDR_BLOCK"
+    network_entity_id = oci_core_internet_gateway.export_oke-igw-quick-OKE-Demo-2e4514f35.id
+    route_type        = "STATIC"
+  }
+}
+
+resource oci_core_private_ip export_vm-test_2 {
+  defined_tags = {
+    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
+    "default_tags.CreatedOn" = "2025-09-22T12:38:02.219Z"
+  }
+  display_name = "vm-test"
+  freeform_tags = {
+  }
+  hostname_label = "vm-test"
+  ip_address     = "10.0.50.245"
+  lifetime       = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_vm-test_1.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljss5v2aej2aoxyxteofj5vzaxgnkofhtdxxbf5ne4dzzme4cdaih5q"
+}
+
+resource oci_core_security_list export_vm-test {
+  compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
+  defined_tags = {
+    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
+    "default_tags.CreatedOn" = "2025-09-22T12:34:12.828Z"
+  }
+  display_name = "vm-test"
+  egress_security_rules {
+    #description = <<Optional value not found in discovery>>
+    destination      = "0.0.0.0/0"
+    destination_type = "CIDR_BLOCK"
+    #icmp_options = <<Optional value not found in discovery>>
+    protocol  = "all"
+    stateless = "false"
+    #tcp_options = <<Optional value not found in discovery>>
+    #udp_options = <<Optional value not found in discovery>>
+  }
+  freeform_tags = {
+  }
+  ingress_security_rules {
+    #description = <<Optional value not found in discovery>>
+    #icmp_options = <<Optional value not found in discovery>>
+    protocol    = "6"
+    source      = "0.0.0.0/0"
+    source_type = "CIDR_BLOCK"
+    stateless   = "false"
+    tcp_options {
+      max = "22"
+      min = "22"
+      #source_port_range = <<Optional value not found in discovery>>
+    }
+    #udp_options = <<Optional value not found in discovery>>
+  }
+  ingress_security_rules {
+    #description = <<Optional value not found in discovery>>
+    #icmp_options = <<Optional value not found in discovery>>
+    protocol    = "6"
+    source      = "0.0.0.0/0"
+    source_type = "CIDR_BLOCK"
+    stateless   = "false"
+    tcp_options {
+      max = "8080"
+      min = "8080"
+      #source_port_range = <<Optional value not found in discovery>>
+    }
+    #udp_options = <<Optional value not found in discovery>>
+  }
   vcn_id = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.id
 }
 
@@ -200,7 +315,7 @@ resource oci_core_security_list export_oke-nodeseclist-quick-OKE-Demo-2e4514f35 
   display_name = "oke-nodeseclist-quick-OKE-Demo-2e4514f35"
   egress_security_rules {
     description      = "Allow pods on one worker node to communicate with pods on other worker nodes"
-    destination      = "10.0.10.0/24"
+    destination      = "10.0.10.0/23"
     destination_type = "CIDR_BLOCK"
     #icmp_options = <<Optional value not found in discovery>>
     protocol  = "all"
@@ -292,7 +407,7 @@ resource oci_core_security_list export_oke-nodeseclist-quick-OKE-Demo-2e4514f35 
     description = "Allow pods on one worker node to communicate with pods on other worker nodes"
     #icmp_options = <<Optional value not found in discovery>>
     protocol    = "all"
-    source      = "10.0.10.0/24"
+    source      = "10.0.10.0/23"
     source_type = "CIDR_BLOCK"
     stateless   = "false"
     #tcp_options = <<Optional value not found in discovery>>
@@ -335,6 +450,16 @@ resource oci_core_security_list export_oke-nodeseclist-quick-OKE-Demo-2e4514f35 
     }
     #udp_options = <<Optional value not found in discovery>>
   }
+  ingress_security_rules {
+    description = "vm-test"
+    #icmp_options = <<Optional value not found in discovery>>
+    protocol    = "all"
+    source      = "10.0.50.0/24"
+    source_type = "CIDR_BLOCK"
+    stateless   = "false"
+    #tcp_options = <<Optional value not found in discovery>>
+    #udp_options = <<Optional value not found in discovery>>
+  }
   vcn_id = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.id
 }
 
@@ -361,7 +486,7 @@ resource oci_core_security_list export_oke-k8sApiEndpoint-quick-OKE-Demo-2e4514f
   }
   egress_security_rules {
     description      = "All traffic to worker nodes"
-    destination      = "10.0.10.0/24"
+    destination      = "10.0.10.0/23"
     destination_type = "CIDR_BLOCK"
     #icmp_options = <<Optional value not found in discovery>>
     protocol  = "6"
@@ -371,7 +496,7 @@ resource oci_core_security_list export_oke-k8sApiEndpoint-quick-OKE-Demo-2e4514f
   }
   egress_security_rules {
     description      = "Path discovery"
-    destination      = "10.0.10.0/24"
+    destination      = "10.0.10.0/23"
     destination_type = "CIDR_BLOCK"
     icmp_options {
       code = "4"
@@ -402,7 +527,7 @@ resource oci_core_security_list export_oke-k8sApiEndpoint-quick-OKE-Demo-2e4514f
     description = "Kubernetes worker to Kubernetes API endpoint communication"
     #icmp_options = <<Optional value not found in discovery>>
     protocol    = "6"
-    source      = "10.0.10.0/24"
+    source      = "10.0.10.0/23"
     source_type = "CIDR_BLOCK"
     stateless   = "false"
     tcp_options {
@@ -416,7 +541,7 @@ resource oci_core_security_list export_oke-k8sApiEndpoint-quick-OKE-Demo-2e4514f
     description = "Kubernetes worker to control plane communication"
     #icmp_options = <<Optional value not found in discovery>>
     protocol    = "6"
-    source      = "10.0.10.0/24"
+    source      = "10.0.10.0/23"
     source_type = "CIDR_BLOCK"
     stateless   = "false"
     tcp_options {
@@ -433,7 +558,7 @@ resource oci_core_security_list export_oke-k8sApiEndpoint-quick-OKE-Demo-2e4514f
       type = "3"
     }
     protocol    = "1"
-    source      = "10.0.10.0/24"
+    source      = "10.0.10.0/23"
     source_type = "CIDR_BLOCK"
     stateless   = "false"
     #tcp_options = <<Optional value not found in discovery>>
@@ -451,30 +576,75 @@ resource oci_core_default_security_list export_oke-svclbseclist-quick-OKE-Demo-2
   display_name = "oke-svclbseclist-quick-OKE-Demo-2e4514f35"
   freeform_tags = {
   }
-  manage_default_resource_id = "ocid1.securitylist.oc1.iad.aaaaaaaae3kifsfrd2a5usdhm7cav34y5dexa46xa6dxk645frttbc57iz3q"
+  manage_default_resource_id = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.default_security_list_id
 }
 
-resource oci_core_vcn export_oke-vcn-quick-OKE-Demo-2e4514f35 {
-  #byoipv6cidr_details = <<Optional value not found in discovery>>
-  #cidr_block = <<Optional value not found in discovery>>
-  cidr_blocks = [
-    "10.0.0.0/16",
-  ]
-  compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
+resource oci_core_private_ip export_privateip20250923165525 {
   defined_tags = {
-    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
-    "default_tags.CreatedOn" = "2025-09-19T08:19:16.865Z"
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:25.485Z"
   }
-  display_name = "oke-vcn-quick-OKE-Demo-2e4514f35"
-  dns_label    = "okedemo"
+  display_name = "privateip20250923165525"
   freeform_tags = {
   }
-  ipv6private_cidr_blocks = [
-  ]
-  #is_ipv6enabled = <<Optional value not found in discovery>>
-  #is_oracle_gua_allocation_enabled = <<Optional value not found in discovery>>
-  security_attributes = {
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.8"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165533 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:33.566Z"
   }
+  display_name = "privateip20250923165533"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.30"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165546 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:46.112Z"
+  }
+  display_name = "privateip20250923165546"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.31"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165540 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:40.033Z"
+  }
+  display_name = "privateip20250923165540"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.33"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
 }
 
 resource oci_core_private_ip export_PE_us-ashburn-1_49e278d5-888f-4c37-91b1-5c0390bff487 {
@@ -492,231 +662,536 @@ resource oci_core_private_ip export_PE_us-ashburn-1_49e278d5-888f-4c37-91b1-5c03
   vnic_id = "ocid1.vnic.oc1.iad.abuwcljtkcnsruvipbefgsfnqgftmwd3l6pyexz3525hunna5i6napno5eua"
 }
 
-resource oci_core_private_ip export_privateip20250919082738 {
+resource oci_core_private_ip export_privateip20250923165539 {
   defined_tags = {
-    "default_tags.CreatedBy" = oci_containerengine_cluster.export_OKE-Demo.id
-    "default_tags.CreatedOn" = "2025-09-19T08:27:38.717Z"
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:39.050Z"
   }
-  display_name = "privateip20250919082738"
+  display_name = "privateip20250923165539"
   freeform_tags = {
   }
   #hostname_label = <<Optional value not found in discovery>>
-  ip_address = "10.0.0.2"
+  ip_address = "10.0.10.36"
   lifetime   = "EPHEMERAL"
   #route_table_id = <<Optional value not found in discovery>>
-  subnet_id = oci_core_subnet.export_oke-api-subnet.id
+  subnet_id = oci_core_subnet.export_private-subnet.id
   #vlan_id = <<Optional value not found in discovery>>
-  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsjaatd5hqfbcnzzt54v3yqqvuz33eg2nywayjabrfheorqi2rlwnq"
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
 }
 
-resource oci_core_private_ip export_vnic20250919082728 {
-  defined_tags = {
-    "default_tags.CreatedBy" = oci_containerengine_cluster.export_OKE-Demo.id
-    "default_tags.CreatedOn" = "2025-09-19T08:27:25.786Z"
-  }
-  display_name = "vnic20250919082728"
-  freeform_tags = {
-    "CreatedBy"  = "CCM"
-    "InstanceId" = oci_core_instance.export_oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0_1.id
-  }
-  #hostname_label = <<Optional value not found in discovery>>
-  ip_address = "10.0.0.3"
-  lifetime   = "EPHEMERAL"
-  #route_table_id = <<Optional value not found in discovery>>
-  subnet_id = oci_core_subnet.export_oke-api-subnet.id
-  #vlan_id = <<Optional value not found in discovery>>
-  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsjaatd5hqfbcnzzt54v3yqqvuz33eg2nywayjabrfheorqi2rlwnq"
-}
-
-resource oci_core_private_ip export_Service-VNIC-for-cluster-ocid1-cluster-oc1-iad-aaaaaaaab62oyt34fwrclxfsxgjl6wjzi3mmyfgz45abwliq4cgnjnagsaqq {
-  defined_tags = {
-    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
-    "default_tags.CreatedOn" = "2025-09-19T08:20:49.406Z"
-  }
-  display_name = "Service VNIC for cluster ocid1.cluster.oc1.iad.aaaaaaaab62oyt34fwrclxfsxgjl6wjzi3mmyfgz45abwliq4cgnjnagsaqq"
-  freeform_tags = {
-  }
-  hostname_label = "cgnjnagsaqq"
-  ip_address     = "10.0.0.4"
-  lifetime       = "EPHEMERAL"
-  #route_table_id = <<Optional value not found in discovery>>
-  subnet_id = oci_core_subnet.export_oke-api-subnet.id
-  #vlan_id = <<Optional value not found in discovery>>
-  vnic_id = "ocid1.vnic.oc1.iad.abuwcljt2735lxfk6r67gw3qohd27adwyuluktjjgbqvvbjv6hsikor6ybhq"
-}
-
-resource oci_core_private_ip export_oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0 {
+resource oci_core_private_ip export_oke-crfols6nacq-n7v5y6wfi6a-s56tjf5wxja-0 {
   defined_tags = {
     "default_tags.CreatedBy" = oci_containerengine_node_pool.export_pool1.id
-    "default_tags.CreatedOn" = "2025-09-19T08:26:53.791Z"
+    "default_tags.CreatedOn" = "2025-09-23T16:54:40.396Z"
   }
-  display_name = "oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0"
+  display_name = "oke-crfols6nacq-n7v5y6wfi6a-s56tjf5wxja-0"
   freeform_tags = {
-    "OKEnodePoolName" = "pool1"
   }
-  hostname_label = "oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0"
+  hostname_label = "oke-crfols6nacq-n7v5y6wfi6a-s56tjf5wxja-0"
+  ip_address     = "10.0.10.71"
+  lifetime       = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsjtkdbnqcnefx6qmfswhno3ugzi4q5lamhwavapa4lralsyasdyeq"
+}
+
+resource oci_core_private_ip export_privateip20250923165542 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:42.023Z"
+  }
+  display_name = "privateip20250923165542"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.102"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165534 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:34.490Z"
+  }
+  display_name = "privateip20250923165534"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.106"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165550 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:50.933Z"
+  }
+  display_name = "privateip20250923165550"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.108"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165528 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:28.766Z"
+  }
+  display_name = "privateip20250923165528"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.118"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165524 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:24.327Z"
+  }
+  display_name = "privateip20250923165524"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.129"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165530 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:30.235Z"
+  }
+  display_name = "privateip20250923165530"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.134"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165524_1 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:24.923Z"
+  }
+  display_name = "privateip20250923165524"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.166"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165545 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:44.976Z"
+  }
+  display_name = "privateip20250923165545"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.170"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165548 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:48.464Z"
+  }
+  display_name = "privateip20250923165548"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.177"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165547 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:47.225Z"
+  }
+  display_name = "privateip20250923165547"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.178"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165549 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:49.670Z"
+  }
+  display_name = "privateip20250923165549"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.208"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165535 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:35.316Z"
+  }
+  display_name = "privateip20250923165535"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.245"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165531 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:30.964Z"
+  }
+  display_name = "privateip20250923165531"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.248"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165532 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:32.710Z"
+  }
+  display_name = "privateip20250923165532"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.10.250"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165529 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:29.507Z"
+  }
+  display_name = "privateip20250923165529"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.11.34"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165536 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:36.299Z"
+  }
+  display_name = "privateip20250923165536"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.11.125"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165528_1 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:28.043Z"
+  }
+  display_name = "privateip20250923165528"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.11.137"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165543 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:43.904Z"
+  }
+  display_name = "privateip20250923165543"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.11.151"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165527 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:27.413Z"
+  }
+  display_name = "privateip20250923165527"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.11.154"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165537 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:37.296Z"
+  }
+  display_name = "privateip20250923165537"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.11.155"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_vnic20250923165514 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:12.498Z"
+  }
+  display_name = "vnic20250923165514"
+  freeform_tags = {
+    "CreatedBy"  = "CCM"
+    "InstanceId" = oci_core_instance.export_oke-crfols6nacq-n7v5y6wfi6a-s56tjf5wxja-0_1.id
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.11.160"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165541 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:41.039Z"
+  }
+  display_name = "privateip20250923165541"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.11.163"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165552 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:52.070Z"
+  }
+  display_name = "privateip20250923165552"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.11.179"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165526 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:26.779Z"
+  }
+  display_name = "privateip20250923165526"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.11.180"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165538 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:38.250Z"
+  }
+  display_name = "privateip20250923165538"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.11.190"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165531_1 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:31.859Z"
+  }
+  display_name = "privateip20250923165531"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.11.194"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165526_1 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:26.143Z"
+  }
+  display_name = "privateip20250923165526"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.11.202"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_privateip20250923165542_1 {
+  defined_tags = {
+    "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "default_tags.CreatedOn" = "2025-09-23T16:55:42.974Z"
+  }
+  display_name = "privateip20250923165542"
+  freeform_tags = {
+  }
+  #hostname_label = <<Optional value not found in discovery>>
+  ip_address = "10.0.11.241"
+  lifetime   = "EPHEMERAL"
+  #route_table_id = <<Optional value not found in discovery>>
+  subnet_id = oci_core_subnet.export_private-subnet.id
+  #vlan_id = <<Optional value not found in discovery>>
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsgutvmnrt7qlt63ixclfbfkxj2l5svommv4ol4yl2avuz255urrxq"
+}
+
+resource oci_core_private_ip export_Service-VNIC-for-cluster-ocid1-cluster-oc1-iad-aaaaaaaallehmi3lsogtycadllm2yj5ftr6ej2ywqymhxhywccrfols6nacq {
+  defined_tags = {
+    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
+    "default_tags.CreatedOn" = "2025-09-23T16:45:52.773Z"
+  }
+  display_name = "Service VNIC for cluster ocid1.cluster.oc1.iad.aaaaaaaallehmi3lsogtycadllm2yj5ftr6ej2ywqymhxhywccrfols6nacq"
+  freeform_tags = {
+  }
+  hostname_label = "crfols6nacq"
   ip_address     = "10.0.0.5"
   lifetime       = "EPHEMERAL"
   #route_table_id = <<Optional value not found in discovery>>
   subnet_id = oci_core_subnet.export_oke-api-subnet.id
   #vlan_id = <<Optional value not found in discovery>>
-  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsymcrotg2x5hdd4545arkijjh3rjytyavqkgitirq2qujeazf6qqq"
+  vnic_id = "ocid1.vnic.oc1.iad.abuwcljtd2kefu7dbshduy75cgoizbdsafsgb4xl5h7l3nsfadlt4wbe7oiq"
 }
 
-resource oci_core_private_ip export_privateip20250919082740 {
-  defined_tags = {
-    "default_tags.CreatedBy" = oci_containerengine_cluster.export_OKE-Demo.id
-    "default_tags.CreatedOn" = "2025-09-19T08:27:40.499Z"
-  }
-  display_name = "privateip20250919082740"
-  freeform_tags = {
-  }
-  #hostname_label = <<Optional value not found in discovery>>
-  ip_address = "10.0.0.6"
-  lifetime   = "EPHEMERAL"
-  #route_table_id = <<Optional value not found in discovery>>
-  subnet_id = oci_core_subnet.export_oke-api-subnet.id
-  #vlan_id = <<Optional value not found in discovery>>
-  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsjaatd5hqfbcnzzt54v3yqqvuz33eg2nywayjabrfheorqi2rlwnq"
-}
-
-resource oci_core_private_ip export_privateip20250919082742 {
-  defined_tags = {
-    "default_tags.CreatedBy" = oci_containerengine_cluster.export_OKE-Demo.id
-    "default_tags.CreatedOn" = "2025-09-19T08:27:42.475Z"
-  }
-  display_name = "privateip20250919082742"
-  freeform_tags = {
-  }
-  #hostname_label = <<Optional value not found in discovery>>
-  ip_address = "10.0.0.7"
-  lifetime   = "EPHEMERAL"
-  #route_table_id = <<Optional value not found in discovery>>
-  subnet_id = oci_core_subnet.export_oke-api-subnet.id
-  #vlan_id = <<Optional value not found in discovery>>
-  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsjaatd5hqfbcnzzt54v3yqqvuz33eg2nywayjabrfheorqi2rlwnq"
-}
-
-resource oci_core_private_ip export_privateip20250919082743 {
-  defined_tags = {
-    "default_tags.CreatedBy" = oci_containerengine_cluster.export_OKE-Demo.id
-    "default_tags.CreatedOn" = "2025-09-19T08:27:43.262Z"
-  }
-  display_name = "privateip20250919082743"
-  freeform_tags = {
-  }
-  #hostname_label = <<Optional value not found in discovery>>
-  ip_address = "10.0.0.8"
-  lifetime   = "EPHEMERAL"
-  #route_table_id = <<Optional value not found in discovery>>
-  subnet_id = oci_core_subnet.export_oke-api-subnet.id
-  #vlan_id = <<Optional value not found in discovery>>
-  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsjaatd5hqfbcnzzt54v3yqqvuz33eg2nywayjabrfheorqi2rlwnq"
-}
-
-resource oci_core_private_ip export_privateip20250919082741 {
-  defined_tags = {
-    "default_tags.CreatedBy" = oci_containerengine_cluster.export_OKE-Demo.id
-    "default_tags.CreatedOn" = "2025-09-19T08:27:41.740Z"
-  }
-  display_name = "privateip20250919082741"
-  freeform_tags = {
-  }
-  #hostname_label = <<Optional value not found in discovery>>
-  ip_address = "10.0.0.9"
-  lifetime   = "EPHEMERAL"
-  #route_table_id = <<Optional value not found in discovery>>
-  subnet_id = oci_core_subnet.export_oke-api-subnet.id
-  #vlan_id = <<Optional value not found in discovery>>
-  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsjaatd5hqfbcnzzt54v3yqqvuz33eg2nywayjabrfheorqi2rlwnq"
-}
-
-resource oci_core_private_ip export_privateip20250919082739 {
-  defined_tags = {
-    "default_tags.CreatedBy" = oci_containerengine_cluster.export_OKE-Demo.id
-    "default_tags.CreatedOn" = "2025-09-19T08:27:39.923Z"
-  }
-  display_name = "privateip20250919082739"
-  freeform_tags = {
-  }
-  #hostname_label = <<Optional value not found in discovery>>
-  ip_address = "10.0.0.10"
-  lifetime   = "EPHEMERAL"
-  #route_table_id = <<Optional value not found in discovery>>
-  subnet_id = oci_core_subnet.export_oke-api-subnet.id
-  #vlan_id = <<Optional value not found in discovery>>
-  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsjaatd5hqfbcnzzt54v3yqqvuz33eg2nywayjabrfheorqi2rlwnq"
-}
-
-resource oci_core_private_ip export_privateip20250919082738_1 {
-  defined_tags = {
-    "default_tags.CreatedBy" = oci_containerengine_cluster.export_OKE-Demo.id
-    "default_tags.CreatedOn" = "2025-09-19T08:27:38.144Z"
-  }
-  display_name = "privateip20250919082738"
-  freeform_tags = {
-  }
-  #hostname_label = <<Optional value not found in discovery>>
-  ip_address = "10.0.0.11"
-  lifetime   = "EPHEMERAL"
-  #route_table_id = <<Optional value not found in discovery>>
-  subnet_id = oci_core_subnet.export_oke-api-subnet.id
-  #vlan_id = <<Optional value not found in discovery>>
-  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsjaatd5hqfbcnzzt54v3yqqvuz33eg2nywayjabrfheorqi2rlwnq"
-}
-
-resource oci_core_private_ip export_privateip20250919082743_1 {
-  defined_tags = {
-    "default_tags.CreatedBy" = oci_containerengine_cluster.export_OKE-Demo.id
-    "default_tags.CreatedOn" = "2025-09-19T08:27:43.934Z"
-  }
-  display_name = "privateip20250919082743"
-  freeform_tags = {
-  }
-  #hostname_label = <<Optional value not found in discovery>>
-  ip_address = "10.0.0.12"
-  lifetime   = "EPHEMERAL"
-  #route_table_id = <<Optional value not found in discovery>>
-  subnet_id = oci_core_subnet.export_oke-api-subnet.id
-  #vlan_id = <<Optional value not found in discovery>>
-  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsjaatd5hqfbcnzzt54v3yqqvuz33eg2nywayjabrfheorqi2rlwnq"
-}
-
-resource oci_core_private_ip export_privateip20250919082739_1 {
-  defined_tags = {
-    "default_tags.CreatedBy" = oci_containerengine_cluster.export_OKE-Demo.id
-    "default_tags.CreatedOn" = "2025-09-19T08:27:39.277Z"
-  }
-  display_name = "privateip20250919082739"
-  freeform_tags = {
-  }
-  #hostname_label = <<Optional value not found in discovery>>
-  ip_address = "10.0.0.13"
-  lifetime   = "EPHEMERAL"
-  #route_table_id = <<Optional value not found in discovery>>
-  subnet_id = oci_core_subnet.export_oke-api-subnet.id
-  #vlan_id = <<Optional value not found in discovery>>
-  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsjaatd5hqfbcnzzt54v3yqqvuz33eg2nywayjabrfheorqi2rlwnq"
-}
-
-resource oci_core_private_ip export_privateip20250919082741_1 {
-  defined_tags = {
-    "default_tags.CreatedBy" = oci_containerengine_cluster.export_OKE-Demo.id
-    "default_tags.CreatedOn" = "2025-09-19T08:27:41.137Z"
-  }
-  display_name = "privateip20250919082741"
-  freeform_tags = {
-  }
-  #hostname_label = <<Optional value not found in discovery>>
-  ip_address = "10.0.0.14"
-  lifetime   = "EPHEMERAL"
-  #route_table_id = <<Optional value not found in discovery>>
-  subnet_id = oci_core_subnet.export_oke-api-subnet.id
-  #vlan_id = <<Optional value not found in discovery>>
-  vnic_id = "ocid1.vnic.oc1.iad.abuwcljsjaatd5hqfbcnzzt54v3yqqvuz33eg2nywayjabrfheorqi2rlwnq"
-}
-
-resource oci_core_instance export_oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0_1 {
+resource oci_core_instance export_oke-crfols6nacq-n7v5y6wfi6a-s56tjf5wxja-0_1 {
   agent_config {
     are_all_plugins_disabled = "false"
     is_management_disabled   = "false"
@@ -735,37 +1210,35 @@ resource oci_core_instance export_oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0_1 {
   create_vnic_details {
     #assign_ipv6ip = <<Optional value not found in discovery>>
     #assign_private_dns_record = <<Optional value not found in discovery>>
-    assign_public_ip = "true"
+    assign_public_ip = "false"
     defined_tags = {
       "default_tags.CreatedBy" = oci_containerengine_node_pool.export_pool1.id
-      "default_tags.CreatedOn" = "2025-09-19T08:26:53.791Z"
+      "default_tags.CreatedOn" = "2025-09-23T16:54:40.396Z"
     }
-    display_name = "oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0"
+    display_name = "oke-crfols6nacq-n7v5y6wfi6a-s56tjf5wxja-0"
     freeform_tags = {
-      "OKEnodePoolName" = "pool1"
     }
-    hostname_label = "oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0"
+    hostname_label = "oke-crfols6nacq-n7v5y6wfi6a-s56tjf5wxja-0"
     #ipv6address_ipv6subnet_cidr_pair_details = <<Optional value not found in discovery>>
     nsg_ids = [
     ]
-    private_ip = "10.0.0.5"
+    private_ip = "10.0.10.71"
     security_attributes = {
     }
     skip_source_dest_check = "false"
-    subnet_id              = oci_core_subnet.export_oke-api-subnet.id
+    subnet_id              = oci_core_subnet.export_private-subnet.id
     #vlan_id = <<Optional value not found in discovery>>
   }
   #dedicated_vm_host_id = <<Optional value not found in discovery>>
   defined_tags = {
     "default_tags.CreatedBy" = oci_containerengine_node_pool.export_pool1.id
-    "default_tags.CreatedOn" = "2025-09-19T08:26:53.592Z"
+    "default_tags.CreatedOn" = "2025-09-23T16:54:40.270Z"
   }
-  display_name = "oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0"
+  display_name = "oke-crfols6nacq-n7v5y6wfi6a-s56tjf5wxja-0"
   extended_metadata = {
   }
   fault_domain = var.fault_domain--FAULT-DOMAIN-1
   freeform_tags = {
-    "OKEnodePoolName" = "pool1"
   }
   #instance_configuration_id = <<Optional value not found in discovery>>
   instance_options {
@@ -783,32 +1256,32 @@ resource oci_core_instance export_oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0_1 {
   }
   #launch_volume_attachments = <<Optional value not found in discovery>>
   metadata = {
-    "ansible_args"                      = "eyJjbHVzdGVyX2lkIjoiY2duam5hZ3NhcXEiLCJrOHNfYXBpc2VydmVyX2FkZHIiOiIxMC4wLjAuNCIsIms4c19hcGlzZXJ2ZXJfcG9ydCI6IjY0NDMiLCJmbGFubmVsX2V0Y2RfY2FfY2VydCI6Ii0tLS0tQkVHSU4gQ0VSVElGSUNBVEUtLS0tLVxuTUlJRGlEQ0NBbkNnQXdJQkFnSVFmdk9udC9wWEIwS2NrWW9QNVE0blBqQU5CZ2txaGtpRzl3MEJBUXNGQURCZVxuTVE4d0RRWURWUVFEREFaTE9ITWdRMEV4Q3pBSkJnTlZCQVlUQWxWVE1ROHdEUVlEVlFRSERBWkJkWE4wYVc0eFxuRHpBTkJnTlZCQW9NQms5eVlXTnNaVEVNTUFvR0ExVUVDd3dEVDJOcE1RNHdEQVlEVlFRSURBVlVaWGhoY3pBZVxuRncweU5UQTVNVGt3T0RJd05UUmFGdzB6TURBNU1Ua3dPREl3TlRSYU1GNHhEekFOQmdOVkJBTU1Ca3M0Y3lCRFxuUVRFTE1Ba0dBMVVFQmhNQ1ZWTXhEekFOQmdOVkJBY01Ca0YxYzNScGJqRVBNQTBHQTFVRUNnd0dUM0poWTJ4bFxuTVF3d0NnWURWUVFMREFOUFkya3hEakFNQmdOVkJBZ01CVlJsZUdGek1JSUJJakFOQmdrcWhraUc5dzBCQVFFRlxuQUFPQ0FROEFNSUlCQ2dLQ0FRRUExRjZBOElra2k5Ukk0aUhjSHVBZ2ZpS3BOSk5rOXlBbmVpSGROQVk3a0ZjNlxuUitCQSt3UWZSRHBsQ0JEazFEcjNTNHBQUzdJNnFwbjFmUVA4d2Y3bWtwV2NTSWlWTzM3dHU2c2JVSkxmREIrY1xuSnFmNUU2bDZjN2JNRGVSVHVBODBEbXdpZEJ4YTh2TFVPMjdmeUI3NWhpdU85WlhabHBVUVhCMlo3VEFjb2dvQ1xuOC9xdDdLTXUxV0lBZE1aNUFueHZwWWNTZTN4SkVrVDJ4QW82VFNNaHdoc0hRcndFSDZqRjE0d2FSbEN6bGMySlxudk1pK3dtZVJkS2Evdk0xQ0JmK1ZxTWFQR1poaXBoV1pOOE4xbjQ2aDI2aG9PUkRmSUdEQXhtRVpDZWJlQ01pYVxuN3RpejN0dklYaDcyMUlXUWtRWldORk1Vb2JTOC8wL0J0WGNQbkNLK0dRSURBUUFCbzBJd1FEQVBCZ05WSFJNQlxuQWY4RUJUQURBUUgvTUE0R0ExVWREd0VCL3dRRUF3SUJCakFkQmdOVkhRNEVGZ1FVVzVvSTZvanlFUFJPeFBzclxuVWpPMDNNZkJaWnd3RFFZSktvWklodmNOQVFFTEJRQURnZ0VCQUZpMHBsVWxrWDQwZlJ3Rzl1RFlua3JYUGkzM1xuNkNacndlajc1SVRwMEVuTHhmV2w2dVo0ZHFwNno4Q3VVejVTdTZVeWNTVlMwMGtOVkJsZlZuR0liV1pseHNzN1xuYTdsZjJwWGtvNWd2T0JUMmV1YmhnQ3hyMHNWMEFtQXRlUmk2RE04YkkwYUFXT2ZwaXhYRUl2a0pjQTV6ZjlWblxuanUzbUEvSlRSQWMwTjZHbzMvdnQrbHZaZE9tN0JlbjdKdjRLU3VkakgwQlZSL3htSDFWR2lJakpiMytHY0VIRVxuSWl0N0JFV2ZMbXRCSkp1ZkZ3dkIxYm1VdWRVQ2svVis0TmdJMFFaMGV4ay9xbDVoR0d0ZnMrSTU5bjhDZ2JXZVxuOWk1bUN5Z0ZyKzFONU95K2FYNktTOTloTkxSTTEvQklsWGtQV3AvL3c3WFlhZkYvaWx1U01ES1R0dVk9XG4tLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tXG5cbiIsImt1YmVkbnNfc3ZjX2lwIjoiMTAuOTYuNS41IiwidG1faWQiOiJva2UiLCJrdWJlbGV0X2NsaWVudF9jYSI6Ii0tLS0tQkVHSU4gQ0VSVElGSUNBVEUtLS0tLVxuTUlJRGlEQ0NBbkNnQXdJQkFnSVFmdk9udC9wWEIwS2NrWW9QNVE0blBqQU5CZ2txaGtpRzl3MEJBUXNGQURCZVxuTVE4d0RRWURWUVFEREFaTE9ITWdRMEV4Q3pBSkJnTlZCQVlUQWxWVE1ROHdEUVlEVlFRSERBWkJkWE4wYVc0eFxuRHpBTkJnTlZCQW9NQms5eVlXTnNaVEVNTUFvR0ExVUVDd3dEVDJOcE1RNHdEQVlEVlFRSURBVlVaWGhoY3pBZVxuRncweU5UQTVNVGt3T0RJd05UUmFGdzB6TURBNU1Ua3dPREl3TlRSYU1GNHhEekFOQmdOVkJBTU1Ca3M0Y3lCRFxuUVRFTE1Ba0dBMVVFQmhNQ1ZWTXhEekFOQmdOVkJBY01Ca0YxYzNScGJqRVBNQTBHQTFVRUNnd0dUM0poWTJ4bFxuTVF3d0NnWURWUVFMREFOUFkya3hEakFNQmdOVkJBZ01CVlJsZUdGek1JSUJJakFOQmdrcWhraUc5dzBCQVFFRlxuQUFPQ0FROEFNSUlCQ2dLQ0FRRUExRjZBOElra2k5Ukk0aUhjSHVBZ2ZpS3BOSk5rOXlBbmVpSGROQVk3a0ZjNlxuUitCQSt3UWZSRHBsQ0JEazFEcjNTNHBQUzdJNnFwbjFmUVA4d2Y3bWtwV2NTSWlWTzM3dHU2c2JVSkxmREIrY1xuSnFmNUU2bDZjN2JNRGVSVHVBODBEbXdpZEJ4YTh2TFVPMjdmeUI3NWhpdU85WlhabHBVUVhCMlo3VEFjb2dvQ1xuOC9xdDdLTXUxV0lBZE1aNUFueHZwWWNTZTN4SkVrVDJ4QW82VFNNaHdoc0hRcndFSDZqRjE0d2FSbEN6bGMySlxudk1pK3dtZVJkS2Evdk0xQ0JmK1ZxTWFQR1poaXBoV1pOOE4xbjQ2aDI2aG9PUkRmSUdEQXhtRVpDZWJlQ01pYVxuN3RpejN0dklYaDcyMUlXUWtRWldORk1Vb2JTOC8wL0J0WGNQbkNLK0dRSURBUUFCbzBJd1FEQVBCZ05WSFJNQlxuQWY4RUJUQURBUUgvTUE0R0ExVWREd0VCL3dRRUF3SUJCakFkQmdOVkhRNEVGZ1FVVzVvSTZvanlFUFJPeFBzclxuVWpPMDNNZkJaWnd3RFFZSktvWklodmNOQVFFTEJRQURnZ0VCQUZpMHBsVWxrWDQwZlJ3Rzl1RFlua3JYUGkzM1xuNkNacndlajc1SVRwMEVuTHhmV2w2dVo0ZHFwNno4Q3VVejVTdTZVeWNTVlMwMGtOVkJsZlZuR0liV1pseHNzN1xuYTdsZjJwWGtvNWd2T0JUMmV1YmhnQ3hyMHNWMEFtQXRlUmk2RE04YkkwYUFXT2ZwaXhYRUl2a0pjQTV6ZjlWblxuanUzbUEvSlRSQWMwTjZHbzMvdnQrbHZaZE9tN0JlbjdKdjRLU3VkakgwQlZSL3htSDFWR2lJakpiMytHY0VIRVxuSWl0N0JFV2ZMbXRCSkp1ZkZ3dkIxYm1VdWRVQ2svVis0TmdJMFFaMGV4ay9xbDVoR0d0ZnMrSTU5bjhDZ2JXZVxuOWk1bUN5Z0ZyKzFONU95K2FYNktTOTloTkxSTTEvQklsWGtQV3AvL3c3WFlhZkYvaWx1U01ES1R0dVk9XG4tLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tXG5cbiIsInByb3h5bXV4X3NlcnZlcl9wb3J0IjoiMTIyNTAifQ=="
-    "bootstrap-kubelet-conf"            = "YXBpVmVyc2lvbjogdjEKY2x1c3RlcnM6Ci0gY2x1c3RlcjoKICAgIGNlcnRpZmljYXRlLWF1dGhvcml0eS1kYXRhOiBMUzB0TFMxQ1JVZEpUaUJEUlZKVVNVWkpRMEZVUlMwdExTMHRDazFKU1VScFJFTkRRVzVEWjBGM1NVSkJaMGxSWm5aUGJuUXZjRmhDTUV0amExbHZVRFZSTkc1UWFrRk9RbWRyY1docmFVYzVkekJDUVZGelJrRkVRbVVLVFZFNGQwUlJXVVJXVVZGRVJFRmFURTlJVFdkUk1FVjRRM3BCU2tKblRsWkNRVmxVUVd4V1ZFMVJPSGRFVVZsRVZsRlJTRVJCV2tKa1dFNHdZVmMwZUFwRWVrRk9RbWRPVmtKQmIwMUNhemw1V1ZkT2MxcFVSVTFOUVc5SFFURlZSVU4zZDBSVU1rNXdUVkUwZDBSQldVUldVVkZKUkVGV1ZWcFlhR2hqZWtGbENrWjNNSGxPVkVFMVRWUnJkMDlFU1hkT1ZGSmhSbmN3ZWsxRVFUVk5WR3QzVDBSSmQwNVVVbUZOUmpSNFJIcEJUa0puVGxaQ1FVMU5RbXR6TkdONVFrUUtVVlJGVEUxQmEwZEJNVlZGUW1oTlExWldUWGhFZWtGT1FtZE9Wa0pCWTAxQ2EwWXhZek5TY0dKcVJWQk5RVEJIUVRGVlJVTm5kMGRVTTBwb1dUSjRiQXBOVVhkM1EyZFpSRlpSVVV4RVFVNVFXVEpyZUVScVFVMUNaMDVXUWtGblRVSldVbXhsUjBaNlRVbEpRa2xxUVU1Q1oydHhhR3RwUnpsM01FSkJVVVZHQ2tGQlQwTkJVVGhCVFVsSlFrTm5TME5CVVVWQk1VWTJRVGhKYTJ0cE9WSkpOR2xJWTBoMVFXZG1hVXR3VGtwT2F6bDVRVzVsYVVoa1RrRlpOMnRHWXpZS1VpdENRU3QzVVdaU1JIQnNRMEpFYXpGRWNqTlROSEJRVXpkSk5uRndiakZtVVZBNGQyWTNiV3R3VjJOVFNXbFdUek0zZEhVMmMySlZTa3htUkVJcll3cEtjV1kxUlRac05tTTNZazFFWlZKVWRVRTRNRVJ0ZDJsa1FuaGhPSFpNVlU4eU4yWjVRamMxYUdsMVR6bGFXRnBzY0ZWUldFSXlXamRVUVdOdloyOURDamd2Y1hRM1MwMTFNVmRKUVdSTldqVkJibmgyY0ZsalUyVXplRXBGYTFReWVFRnZObFJUVFdoM2FITklVWEozUlVnMmFrWXhOSGRoVW14RGVteGpNa29LZGsxcEszZHRaVkprUzJFdmRrMHhRMEptSzFaeFRXRlFSMXBvYVhCb1YxcE9PRTR4YmpRMmFESTJhRzlQVWtSbVNVZEVRWGh0UlZwRFpXSmxRMDFwWVFvM2RHbDZNM1IyU1Zob056SXhTVmRSYTFGYVYwNUdUVlZ2WWxNNEx6QXZRblJZWTFCdVEwc3JSMUZKUkVGUlFVSnZNRWwzVVVSQlVFSm5UbFpJVWsxQ0NrRm1PRVZDVkVGRVFWRklMMDFCTkVkQk1WVmtSSGRGUWk5M1VVVkJkMGxDUW1wQlpFSm5UbFpJVVRSRlJtZFJWVmMxYjBrMmIycDVSVkJTVDNoUWMzSUtWV3BQTUROTlprSmFXbmQzUkZGWlNrdHZXa2xvZG1OT1FWRkZURUpSUVVSblowVkNRVVpwTUhCc1ZXeHJXRFF3WmxKM1J6bDFSRmx1YTNKWVVHa3pNd28yUTFweWQyVnFOelZKVkhBd1JXNU1lR1pYYkRaMVdqUmtjWEEyZWpoRGRWVjZOVk4xTmxWNVkxTldVekF3YTA1V1FteG1WbTVIU1dKWFdteDRjM00zQ21FM2JHWXljRmhyYnpWbmRrOUNWREpsZFdKb1owTjRjakJ6VmpCQmJVRjBaVkpwTmtSTk9HSkpNR0ZCVjA5bWNHbDRXRVZKZG10S1kwRTFlbVk1Vm00S2FuVXpiVUV2U2xSU1FXTXdUalpIYnpNdmRuUXJiSFphWkU5dE4wSmxiamRLZGpSTFUzVmtha2d3UWxaU0wzaHRTREZXUjJsSmFrcGlNeXRIWTBWSVJRcEphWFEzUWtWWFpreHRkRUpLU25WbVJuZDJRakZpYlZWMVpGVkRheTlXS3pST1owa3dVVm93WlhockwzRnNOV2hIUjNSbWN5dEpOVGx1T0VObllsZGxDamxwTlcxRGVXZEdjaXN4VGpWUGVTdGhXRFpMVXprNWFFNU1VazB4TDBKSmJGaHJVRmR3THk5M04xaFpZV1pHTDJsc2RWTk5SRXRVZEhWWlBRb3RMUzB0TFVWT1JDQkRSVkpVU1VaSlEwRlVSUzB0TFMwdENnbz0KICAgIHNlcnZlcjogaHR0cHM6Ly8xMC4wLjAuNDo2NDQzCiAgbmFtZTogYm9vdHN0cmFwCmNvbnRleHRzOgotIGNvbnRleHQ6CiAgICBjbHVzdGVyOiBib290c3RyYXAKICAgIHVzZXI6IGJvb3RzdHJhcAogIG5hbWU6IGJvb3RzdHJhcApjdXJyZW50LWNvbnRleHQ6IGJvb3RzdHJhcApraW5kOiBDb25maWcKcHJlZmVyZW5jZXM6IHt9CnVzZXJzOgotIG5hbWU6IGJvb3RzdHJhcAogIHVzZXI6CiAgICB0b2tlbjogNnc1cGhsLmo3MXdnYjBmcmhncG5raWsK"
-    "inventory_tmpl"                    = "[tkm-minions]\nlocalhost initial_node_labels=name=OKE-Demo,oci.oraclecloud.com/node.info.managed=true node_is_on_private_subnet={NODE_IS_ON_PRIVATE_SUBNET} nodeid_suffix={NODE_SUFFIX} shape=VM.Standard.E5.Flex ansible_user=opc tenancyid=ocid1.tenancy.oc1..aaaaaaaaro7aox2fclu4urtpgsbacnrmjv46e7n4fw3sc2wbq24l7dzf3kba compartmentid_prefix=ocid1.compartment.oc1 k8s_kubelet_hostname={K8S_KUBELET_HOSTNAME} region_key=IAD ansible_connection=local public_ipaddress={PUBLIC_IP} zone=bxtG:US-ASHBURN-AD-1 k8s_version=v1.33.1 displayname=oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0 compartmentname=devops nodeid_prefix={NODE_PREFIX} region_name=us-ashburn-1 ta_version={TA_VERSION} region=us-ashburn-1 compartmentid_suffix=aaaaaaaa3zyzigwkufs5e4zks5rwtm244luxr5ztlj3ll6oznvh4dthydxnq private_ipaddress={PRIVATE_IP}\n"
+    "ansible_args"                      = "eyJjbHVzdGVyX2lkIjoiY3Jmb2xzNm5hY3EiLCJrOHNfYXBpc2VydmVyX2FkZHIiOiIxMC4wLjAuNSIsIms4c19hcGlzZXJ2ZXJfcG9ydCI6IjY0NDMiLCJmbGFubmVsX2V0Y2RfY2FfY2VydCI6Ii0tLS0tQkVHSU4gQ0VSVElGSUNBVEUtLS0tLVxuTUlJRGlEQ0NBbkNnQXdJQkFnSVFHMTF1NDduWW9pSmsyMkxxREpGNUhEQU5CZ2txaGtpRzl3MEJBUXNGQURCZVxuTVE4d0RRWURWUVFEREFaTE9ITWdRMEV4Q3pBSkJnTlZCQVlUQWxWVE1ROHdEUVlEVlFRSERBWkJkWE4wYVc0eFxuRHpBTkJnTlZCQW9NQms5eVlXTnNaVEVNTUFvR0ExVUVDd3dEVDJOcE1RNHdEQVlEVlFRSURBVlVaWGhoY3pBZVxuRncweU5UQTVNak14TmpRMU5UaGFGdzB6TURBNU1qTXhOalExTlRoYU1GNHhEekFOQmdOVkJBTU1Ca3M0Y3lCRFxuUVRFTE1Ba0dBMVVFQmhNQ1ZWTXhEekFOQmdOVkJBY01Ca0YxYzNScGJqRVBNQTBHQTFVRUNnd0dUM0poWTJ4bFxuTVF3d0NnWURWUVFMREFOUFkya3hEakFNQmdOVkJBZ01CVlJsZUdGek1JSUJJakFOQmdrcWhraUc5dzBCQVFFRlxuQUFPQ0FROEFNSUlCQ2dLQ0FRRUF3WmlMTWRySkw5QjdOWGpxR21XVU0wNFZselR3eGdnK3lFZmtOc2FTMnB6ZFxub1RHRFRSR2VnZng3OTF4Ly9xQ0E0RktIdlAwaFJSWi8zY0VLUm9OK0FLVTlYdHNBdTYrekRMdDNkRlg0S0xkZFxuQ2I1cXhUdzZNMGtLaEg1TFdtVjN2dkdMaHVWMjlKQlhmMFNTcmhGZmx1TXNHRVJTeENLMzdDSzlIbTdCZEpNSFxuMXlNcmZJRElNdnAwTU11TTN4SVViTUo0ell1eEFlaUliTGxTRGlPSFl6R0ttZWVBNmFQb1FyY1p4bXRIT3pMdFxuR1V6a1BITXZ6WXBPaE05WUxzUmNseXR0Q29BQzNnbGtsVU9HNnZBYi9jNTBOOUlkWU43Nm8wakpnbEFtMk5HUFxuWjJoTElGZU92S0JwTmhSbUpBcFVKeHBIdCtVNnVUdkhwd2Z1eW1hL1ZRSURBUUFCbzBJd1FEQVBCZ05WSFJNQlxuQWY4RUJUQURBUUgvTUE0R0ExVWREd0VCL3dRRUF3SUJCakFkQmdOVkhRNEVGZ1FVRlNPYW5FTDU0MllWSk4xR1xub2pFc25xSEl2Rll3RFFZSktvWklodmNOQVFFTEJRQURnZ0VCQUM5R0VDQ0hmMkR2UXNSMGVpU2pzQ1ZzWjBDU1xuMEh4bmRwSlhVRzNYYkI0RnJzSlRGWTNtalNiYlZITGhTM3BrZGxnRGZUVWwzWFJ1MUJaTjNVdENCUXdWMjl4NlxubUhQL0E4QkVDZk9ZWnF2aUo4VXpJTEt1N3B1cENZeWFaVjE4bU5NdEJ5M2hnVmxCUk1jUzhjSmJGVmVSamo1Q1xuQTFPYVRzc0JoL3U5R1o2MGdBZndiWU5yQ0N1WEFMdnJ6b0FadFdoaURLWkp5OGFlYmZLMURkWWRjTkM5RjRBd1xuNXFqVFRvazhrVWFwSmZaWStERXozZHBrdnNseDgzY1hFOEVTYjc2SEpkVjIzejN5VHJMR2ZtRlJONndUK2VWUFxueDN2K0xLeWI3U0ZWMUdxQmhETGIrdGNlVlRLMlU1eGE1S3NsZXE1RldEZXgvVDRSR2VMZ0hhVnNhcDA9XG4tLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tXG5cbiIsImt1YmVkbnNfc3ZjX2lwIjoiMTAuOTYuNS41IiwidG1faWQiOiJva2UiLCJrdWJlbGV0X2NsaWVudF9jYSI6Ii0tLS0tQkVHSU4gQ0VSVElGSUNBVEUtLS0tLVxuTUlJRGlEQ0NBbkNnQXdJQkFnSVFHMTF1NDduWW9pSmsyMkxxREpGNUhEQU5CZ2txaGtpRzl3MEJBUXNGQURCZVxuTVE4d0RRWURWUVFEREFaTE9ITWdRMEV4Q3pBSkJnTlZCQVlUQWxWVE1ROHdEUVlEVlFRSERBWkJkWE4wYVc0eFxuRHpBTkJnTlZCQW9NQms5eVlXTnNaVEVNTUFvR0ExVUVDd3dEVDJOcE1RNHdEQVlEVlFRSURBVlVaWGhoY3pBZVxuRncweU5UQTVNak14TmpRMU5UaGFGdzB6TURBNU1qTXhOalExTlRoYU1GNHhEekFOQmdOVkJBTU1Ca3M0Y3lCRFxuUVRFTE1Ba0dBMVVFQmhNQ1ZWTXhEekFOQmdOVkJBY01Ca0YxYzNScGJqRVBNQTBHQTFVRUNnd0dUM0poWTJ4bFxuTVF3d0NnWURWUVFMREFOUFkya3hEakFNQmdOVkJBZ01CVlJsZUdGek1JSUJJakFOQmdrcWhraUc5dzBCQVFFRlxuQUFPQ0FROEFNSUlCQ2dLQ0FRRUF3WmlMTWRySkw5QjdOWGpxR21XVU0wNFZselR3eGdnK3lFZmtOc2FTMnB6ZFxub1RHRFRSR2VnZng3OTF4Ly9xQ0E0RktIdlAwaFJSWi8zY0VLUm9OK0FLVTlYdHNBdTYrekRMdDNkRlg0S0xkZFxuQ2I1cXhUdzZNMGtLaEg1TFdtVjN2dkdMaHVWMjlKQlhmMFNTcmhGZmx1TXNHRVJTeENLMzdDSzlIbTdCZEpNSFxuMXlNcmZJRElNdnAwTU11TTN4SVViTUo0ell1eEFlaUliTGxTRGlPSFl6R0ttZWVBNmFQb1FyY1p4bXRIT3pMdFxuR1V6a1BITXZ6WXBPaE05WUxzUmNseXR0Q29BQzNnbGtsVU9HNnZBYi9jNTBOOUlkWU43Nm8wakpnbEFtMk5HUFxuWjJoTElGZU92S0JwTmhSbUpBcFVKeHBIdCtVNnVUdkhwd2Z1eW1hL1ZRSURBUUFCbzBJd1FEQVBCZ05WSFJNQlxuQWY4RUJUQURBUUgvTUE0R0ExVWREd0VCL3dRRUF3SUJCakFkQmdOVkhRNEVGZ1FVRlNPYW5FTDU0MllWSk4xR1xub2pFc25xSEl2Rll3RFFZSktvWklodmNOQVFFTEJRQURnZ0VCQUM5R0VDQ0hmMkR2UXNSMGVpU2pzQ1ZzWjBDU1xuMEh4bmRwSlhVRzNYYkI0RnJzSlRGWTNtalNiYlZITGhTM3BrZGxnRGZUVWwzWFJ1MUJaTjNVdENCUXdWMjl4NlxubUhQL0E4QkVDZk9ZWnF2aUo4VXpJTEt1N3B1cENZeWFaVjE4bU5NdEJ5M2hnVmxCUk1jUzhjSmJGVmVSamo1Q1xuQTFPYVRzc0JoL3U5R1o2MGdBZndiWU5yQ0N1WEFMdnJ6b0FadFdoaURLWkp5OGFlYmZLMURkWWRjTkM5RjRBd1xuNXFqVFRvazhrVWFwSmZaWStERXozZHBrdnNseDgzY1hFOEVTYjc2SEpkVjIzejN5VHJMR2ZtRlJONndUK2VWUFxueDN2K0xLeWI3U0ZWMUdxQmhETGIrdGNlVlRLMlU1eGE1S3NsZXE1RldEZXgvVDRSR2VMZ0hhVnNhcDA9XG4tLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tXG5cbiIsInByb3h5bXV4X3NlcnZlcl9wb3J0IjoiMTIyNTAifQ=="
+    "bootstrap-kubelet-conf"            = "YXBpVmVyc2lvbjogdjEKY2x1c3RlcnM6Ci0gY2x1c3RlcjoKICAgIGNlcnRpZmljYXRlLWF1dGhvcml0eS1kYXRhOiBMUzB0TFMxQ1JVZEpUaUJEUlZKVVNVWkpRMEZVUlMwdExTMHRDazFKU1VScFJFTkRRVzVEWjBGM1NVSkJaMGxSUnpFeGRUUTNibGx2YVVwck1qSk1jVVJLUmpWSVJFRk9RbWRyY1docmFVYzVkekJDUVZGelJrRkVRbVVLVFZFNGQwUlJXVVJXVVZGRVJFRmFURTlJVFdkUk1FVjRRM3BCU2tKblRsWkNRVmxVUVd4V1ZFMVJPSGRFVVZsRVZsRlJTRVJCV2tKa1dFNHdZVmMwZUFwRWVrRk9RbWRPVmtKQmIwMUNhemw1V1ZkT2MxcFVSVTFOUVc5SFFURlZSVU4zZDBSVU1rNXdUVkUwZDBSQldVUldVVkZKUkVGV1ZWcFlhR2hqZWtGbENrWjNNSGxPVkVFMVRXcE5lRTVxVVRGT1ZHaGhSbmN3ZWsxRVFUVk5hazE0VG1wUk1VNVVhR0ZOUmpSNFJIcEJUa0puVGxaQ1FVMU5RbXR6TkdONVFrUUtVVlJGVEUxQmEwZEJNVlZGUW1oTlExWldUWGhFZWtGT1FtZE9Wa0pCWTAxQ2EwWXhZek5TY0dKcVJWQk5RVEJIUVRGVlJVTm5kMGRVTTBwb1dUSjRiQXBOVVhkM1EyZFpSRlpSVVV4RVFVNVFXVEpyZUVScVFVMUNaMDVXUWtGblRVSldVbXhsUjBaNlRVbEpRa2xxUVU1Q1oydHhhR3RwUnpsM01FSkJVVVZHQ2tGQlQwTkJVVGhCVFVsSlFrTm5TME5CVVVWQmQxcHBURTFrY2twTU9VSTNUbGhxY1VkdFYxVk5NRFJXYkhwVWQzaG5aeXQ1UldaclRuTmhVekp3ZW1RS2IxUkhSRlJTUjJWblpuZzNPVEY0THk5eFEwRTBSa3RJZGxBd2FGSlNXaTh6WTBWTFVtOU9LMEZMVlRsWWRITkJkVFlyZWtSTWRETmtSbGcwUzB4a1pBcERZalZ4ZUZSM05rMHdhMHRvU0RWTVYyMVdNM1oyUjB4b2RWWXlPVXBDV0dZd1UxTnlhRVptYkhWTmMwZEZVbE40UTBzek4wTkxPVWh0TjBKa1NrMUlDakY1VFhKbVNVUkpUWFp3TUUxTmRVMHplRWxWWWsxS05IcFpkWGhCWldsSllreHNVMFJwVDBoWmVrZExiV1ZsUVRaaFVHOVJjbU5hZUcxMFNFOTZUSFFLUjFWNmExQklUWFo2V1hCUGFFMDVXVXh6VW1Oc2VYUjBRMjlCUXpObmJHdHNWVTlITm5aQllpOWpOVEJPT1Vsa1dVNDNObTh3YWtwbmJFRnRNazVIVUFwYU1taE1TVVpsVDNaTFFuQk9hRkp0U2tGd1ZVcDRjRWgwSzFVMmRWUjJTSEIzWm5WNWJXRXZWbEZKUkVGUlFVSnZNRWwzVVVSQlVFSm5UbFpJVWsxQ0NrRm1PRVZDVkVGRVFWRklMMDFCTkVkQk1WVmtSSGRGUWk5M1VVVkJkMGxDUW1wQlpFSm5UbFpJVVRSRlJtZFJWVVpUVDJGdVJVdzFOREpaVmtwT01VY0tiMnBGYzI1eFNFbDJSbGwzUkZGWlNrdHZXa2xvZG1OT1FWRkZURUpSUVVSblowVkNRVU01UjBWRFEwaG1Na1IyVVhOU01HVnBVMnB6UTFaeldqQkRVd293U0hodVpIQktXRlZITTFoaVFqUkdjbk5LVkVaWk0yMXFVMkppVmtoTWFGTXpjR3RrYkdkRVpsUlZiRE5ZVW5VeFFscE9NMVYwUTBKUmQxWXlPWGcyQ20xSVVDOUJPRUpGUTJaUFdWcHhkbWxLT0ZWNlNVeExkVGR3ZFhCRFdYbGhXbFl4T0cxT1RYUkNlVE5vWjFac1FsSk5ZMU00WTBwaVJsWmxVbXBxTlVNS1FURlBZVlJ6YzBKb0wzVTVSMW8yTUdkQlpuZGlXVTV5UTBOMVdFRk1kbko2YjBGYWRGZG9hVVJMV2twNU9HRmxZbVpMTVVSa1dXUmpUa001UmpSQmR3bzFjV3BVVkc5ck9HdFZZWEJLWmxwWkswUkZlak5rY0d0MmMyeDRPRE5qV0VVNFJWTmlOelpJU21SV01qTjZNM2xVY2t4SFptMUdVazQyZDFRclpWWlFDbmd6ZGl0TVMzbGlOMU5HVmpGSGNVSm9SRXhpSzNSalpWWlVTekpWTlhoaE5VdHpiR1Z4TlVaWFJHVjRMMVEwVWtkbFRHZElZVlp6WVhBd1BRb3RMUzB0TFVWT1JDQkRSVkpVU1VaSlEwRlVSUzB0TFMwdENnbz0KICAgIHNlcnZlcjogaHR0cHM6Ly8xMC4wLjAuNTo2NDQzCiAgbmFtZTogYm9vdHN0cmFwCmNvbnRleHRzOgotIGNvbnRleHQ6CiAgICBjbHVzdGVyOiBib290c3RyYXAKICAgIHVzZXI6IGJvb3RzdHJhcAogIG5hbWU6IGJvb3RzdHJhcApjdXJyZW50LWNvbnRleHQ6IGJvb3RzdHJhcApraW5kOiBDb25maWcKcHJlZmVyZW5jZXM6IHt9CnVzZXJzOgotIG5hbWU6IGJvb3RzdHJhcAogIHVzZXI6CiAgICB0b2tlbjogNGMwbm8xLmpvMTMxNzYwczJ2enFncjUK"
+    "inventory_tmpl"                    = "[tkm-minions]\nlocalhost initial_node_labels=name=pool1,oci.oraclecloud.com/node.info.managed=true node_is_on_private_subnet={NODE_IS_ON_PRIVATE_SUBNET} nodeid_suffix={NODE_SUFFIX} shape=VM.Standard.E3.Flex ansible_user=opc tenancyid=ocid1.tenancy.oc1..aaaaaaaaro7aox2fclu4urtpgsbacnrmjv46e7n4fw3sc2wbq24l7dzf3kba compartmentid_prefix=ocid1.compartment.oc1 k8s_kubelet_hostname={K8S_KUBELET_HOSTNAME} region_key=IAD ansible_connection=local public_ipaddress={PUBLIC_IP} zone=bxtG:US-ASHBURN-AD-1 k8s_version=v1.31.10 displayname=oke-crfols6nacq-n7v5y6wfi6a-s56tjf5wxja-0 compartmentname=devops nodeid_prefix={NODE_PREFIX} region_name=us-ashburn-1 ta_version={TA_VERSION} region=us-ashburn-1 compartmentid_suffix=aaaaaaaa3zyzigwkufs5e4zks5rwtm244luxr5ztlj3ll6oznvh4dthydxnq private_ipaddress={PRIVATE_IP}\n"
     "ip-families"                       = "IPv4"
     "oci_tld"                           = "oraclecloud.com"
     "oke-ad"                            = var.availability_domain--bxtG-US-ASHBURN-AD-1
-    "oke-cluster-display-name"          = "OKE-Demo"
-    "oke-cluster-id"                    = oci_containerengine_cluster.export_OKE-Demo.id
-    "oke-cluster-label"                 = "cgnjnagsaqq"
+    "oke-cluster-display-name"          = "Demo-App3"
+    "oke-cluster-id"                    = oci_containerengine_cluster.export_Demo-OKE-US.id
+    "oke-cluster-label"                 = "crfols6nacq"
     "oke-compartment-name"              = "devops"
-    "oke-image-name"                    = "Oracle-Linux-8.10-2025.07.21-0-OKE-1.33.1-967"
-    "oke-initial-node-labels"           = "name=OKE-Demo,oci.oraclecloud.com/node.info.managed=true"
+    "oke-image-name"                    = "Oracle-Linux-8.10-2025.06.17-0-OKE-1.31.10-878"
+    "oke-initial-node-labels"           = "name=pool1,oci.oraclecloud.com/node.info.managed=true"
     "oke-is-cloud-init"                 = "true"
-    "oke-is-on-private-subnet"          = "false"
+    "oke-is-on-private-subnet"          = "true"
     "oke-is-onsr"                       = "false"
     "oke-is-preemptible"                = "false"
     "oke-is-private-worker"             = "true"
-    "oke-k8version"                     = "v1.33.1"
+    "oke-k8version"                     = "v1.31.10"
     "oke-max-pods"                      = "31"
     "oke-native-pod-networking"         = "true"
-    "oke-node-package-node-all-version" = "oci-oke-node-all-1.33.1*"
+    "oke-node-package-node-all-version" = "oci-oke-node-all-1.31.10*"
     "oke-pool-id"                       = oci_containerengine_node_pool.export_pool1.id
-    "oke-pool-label"                    = "nooqmmoqf7a"
+    "oke-pool-label"                    = "n7v5y6wfi6a"
     "oke-preconfigured-vnics"           = "false"
     "oke-slot"                          = "0"
-    "oke-subnet-label"                  = "s2sjo3cxluq"
+    "oke-subnet-label"                  = "s56tjf5wxja"
     "oke-tenancy-id"                    = "ocid1.tenancy.oc1..aaaaaaaaro7aox2fclu4urtpgsbacnrmjv46e7n4fw3sc2wbq24l7dzf3kba"
     "oke-tm"                            = "oke"
     "oke_artifact_signing_key"          = "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAtjfjKcFqAo3tBgeEvDee\nsxFfX/eneDEdNYUGL7GewU0GHkQxyyS6lQwHatKAYZVOk2ity1X3hA56a90Z0nyF\n0KP/gqDAo0VQDSH46uOT6z7UGv5PclsAbeI1S67SwSSUAze4yma2ROzFGjGfOPZ+\nZ+NSCdCy59CuxNYWk3pGxev0MZNxCVsu5hFP7XAgSmuL5vWpL0x5EIZCHlTgLK/r\nJR9DNDSCDer/lChXO/H2IFfJAWEZ6zkgM7EMs0+tQliuaRbbWj9f2gEsKT41sjBf\ntJ4VKCTeloXRA7u6kjftBAaIh4mvETpn3Hw8e4tfjjIH2nsBOgDl9OnfVCzbPfmX\nFvCLus8K0VxG5xiw28VXk1ZI00WWufp7OqR7Hjc9Ec4zLSsxNCw5VphKEMxkxk9u\n1Wfc9KmXRFrg8HphbZw3xMXt1OF/iGFL7eHlckGHt3Fk87OooCXNLWfm5b5ju0lU\nZ0rgXZvYE1RQLhHe8YpPvohLDncoatSnXp6tfvukQF6GNDIftEXYiKcv7yNmWzHo\nJZ0QefKFQs2KEChyMX1z7i59AUk7RojfllhKHnCDtazXDcNi/sPh2tCtDEp+6qdD\n39MYgOy1LxKBXKelFQ0PSnr1zmpu94tIhsCr862+OjkVHpANEqNKUlEV91+AaOwQ\nkMQgJPfIZH8MyLGV7kbeLCcCAwEAAQ==\n-----END PUBLIC KEY-----"
@@ -816,14 +1289,14 @@ resource oci_core_instance export_oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0_1 {
     "oke_maturity"                      = "prd"
     "oke_namespace"                     = "odx-oke"
     "realm"                             = "oc1"
-    "ssh_authorized_keys"               = ""
+    "ssh_authorized_keys"               = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDA7FmSPqmQxQDnMpbEF1NApFKZNHJ/LNyIwGUgy5gUnN3ZrTotiS4z+H6F8uGrKxn4nBhbezqgMq2/Hva4LIGAqFyLEkyqUxzvwihAqEv4Jamf/M9ed6gjnIjm1WJF6qfMLDN24mEG3i2YHEUgFoOYetCqyDVijWgQcF0j/IpAmhwJkftnKFLJXs1Lmeg3F9D2rAY4Y5iNGcJzxOH+/XT2L/4o+XqE88WBzt5DGWUpPBzdsj770Er2X6Gdmp9USFFYyFMM7/YpPg8qUnXpApyUz6NO//a37c22M7AkSaX4g5kMevgdxFqYaiWF4eNWx1eC+4/jak+x5qV0BIEymmrl wilbur\n"
     "user_data"                         = "IyEvYmluL2Jhc2gKb2tlX2luaXRfc2NyaXB0PSQoY3VybCAtLWZhaWwgLW0gNSAtSCAiQXV0aG9yaXphdGlvbjogQmVhcmVyIE9yYWNsZSIgLUwwIGh0dHA6Ly8xNjkuMjU0LjE2OS4yNTQvb3BjL3YyL2luc3RhbmNlL21ldGFkYXRhL29rZV9pbml0X3NjcmlwdCkKaWYgWyAkPyAtbmUgMCBdOyB0aGVuCiAgb2tlX2luaXRfc2NyaXB0PSQoY3VybCAtLWZhaWwgLW0gNSAtZyAtSCAiQXV0aG9yaXphdGlvbjogQmVhcmVyIE9yYWNsZSIgLUwwIGh0dHA6Ly9bZmQwMDpjMTo6YTlmZTphOWZlXS9vcGMvdjIvaW5zdGFuY2UvbWV0YWRhdGEvb2tlX2luaXRfc2NyaXB0KQpmaQplY2hvICRva2VfaW5pdF9zY3JpcHQgfCBiYXNlNjQgLS1kZWNvZGUgPiAvdmFyL3J1bi9va2UtaW5pdC5zaAp0b3VjaCAvdmFyL3J1bi8ub2tlLWRlZmF1bHQtY2xvdWQtaW5pdAoKYmFzaCAvdmFyL3J1bi9va2UtaW5pdC5zaA=="
   }
   #preserve_boot_volume = <<Optional value not found in discovery>>
   #preserve_data_volumes_created_at_launch = <<Optional value not found in discovery>>
   security_attributes = {
   }
-  shape = "VM.Standard.E5.Flex"
+  shape = "VM.Standard.E3.Flex"
   shape_config {
     baseline_ocpu_utilization = ""
     memory_in_gbs             = "16"
@@ -837,10 +1310,176 @@ resource oci_core_instance export_oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0_1 {
     #instance_source_image_filter_details = <<Optional value not found in discovery>>
     #is_preserve_boot_volume_enabled = <<Optional value not found in discovery>>
     #kms_key_id = <<Optional value not found in discovery>>
-    source_id   = var.oci_core_instance--source_details-source_id--export_oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0_1
+    source_id   = var.oci_core_instance--source_details-source_id--export_oke-crfols6nacq-n7v5y6wfi6a-s56tjf5wxja-0_1
     source_type = "image"
   }
-  state = "STOPPED"
+  state = "RUNNING"
+  #update_operation_constraint = <<Optional value not found in discovery>>
+}
+
+resource oci_core_instance export_vm-test_3 {
+  agent_config {
+    are_all_plugins_disabled = "false"
+    is_management_disabled   = "false"
+    is_monitoring_disabled   = "false"
+    plugins_config {
+      desired_state = "DISABLED"
+      name          = "WebLogic Management Service"
+    }
+    plugins_config {
+      desired_state = "DISABLED"
+      name          = "Vulnerability Scanning"
+    }
+    plugins_config {
+      desired_state = "DISABLED"
+      name          = "Oracle Java Management Service"
+    }
+    plugins_config {
+      desired_state = "DISABLED"
+      name          = "OS Management Hub Agent"
+    }
+    plugins_config {
+      desired_state = "DISABLED"
+      name          = "Management Agent"
+    }
+    plugins_config {
+      desired_state = "DISABLED"
+      name          = "Fleet Application Management Service"
+    }
+    plugins_config {
+      desired_state = "ENABLED"
+      name          = "Custom Logs Monitoring"
+    }
+    plugins_config {
+      desired_state = "DISABLED"
+      name          = "Compute RDMA GPU Monitoring"
+    }
+    plugins_config {
+      desired_state = "ENABLED"
+      name          = "Compute Instance Run Command"
+    }
+    plugins_config {
+      desired_state = "ENABLED"
+      name          = "Compute Instance Monitoring"
+    }
+    plugins_config {
+      desired_state = "DISABLED"
+      name          = "Compute HPC RDMA Auto-Configuration"
+    }
+    plugins_config {
+      desired_state = "DISABLED"
+      name          = "Compute HPC RDMA Authentication"
+    }
+    plugins_config {
+      desired_state = "ENABLED"
+      name          = "Cloud Guard Workload Protection"
+    }
+    plugins_config {
+      desired_state = "DISABLED"
+      name          = "Block Volume Management"
+    }
+    plugins_config {
+      desired_state = "DISABLED"
+      name          = "Bastion"
+    }
+  }
+  #async = <<Optional value not found in discovery>>
+  availability_config {
+    #is_live_migration_preferred = <<Optional value not found in discovery>>
+    recovery_action = "RESTORE_INSTANCE"
+  }
+  availability_domain = var.availability_domain--bxtG-US-ASHBURN-AD-1
+  #capacity_reservation_id = <<Optional value not found in discovery>>
+  #cluster_placement_group_id = <<Optional value not found in discovery>>
+  compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
+  #compute_cluster_id = <<Optional value not found in discovery>>
+  create_vnic_details {
+    #assign_ipv6ip = <<Optional value not found in discovery>>
+    #assign_private_dns_record = <<Optional value not found in discovery>>
+    assign_public_ip = "true"
+    defined_tags = {
+      "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
+      "default_tags.CreatedOn" = "2025-09-22T12:38:02.219Z"
+    }
+    display_name = "vm-test"
+    freeform_tags = {
+    }
+    hostname_label = "vm-test"
+    #ipv6address_ipv6subnet_cidr_pair_details = <<Optional value not found in discovery>>
+    nsg_ids = [
+    ]
+    private_ip = "10.0.50.245"
+    security_attributes = {
+    }
+    skip_source_dest_check = "false"
+    subnet_id              = oci_core_subnet.export_vm-test_1.id
+    #vlan_id = <<Optional value not found in discovery>>
+  }
+  #dedicated_vm_host_id = <<Optional value not found in discovery>>
+  defined_tags = {
+    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
+    "default_tags.CreatedOn" = "2025-09-22T12:38:02.076Z"
+  }
+  display_name = "vm-test"
+  extended_metadata = {
+  }
+  fault_domain = var.fault_domain--FAULT-DOMAIN-1
+  freeform_tags = {
+  }
+  #instance_configuration_id = <<Optional value not found in discovery>>
+  instance_options {
+    are_legacy_imds_endpoints_disabled = "false"
+  }
+  #ipxe_script = <<Optional value not found in discovery>>
+  #is_pv_encryption_in_transit_enabled = <<Optional value not found in discovery>>
+  launch_options {
+    boot_volume_type                    = "PARAVIRTUALIZED"
+    firmware                            = "UEFI_64"
+    is_consistent_volume_naming_enabled = "true"
+    is_pv_encryption_in_transit_enabled = "true"
+    network_type                        = "PARAVIRTUALIZED"
+    remote_data_volume_type             = "PARAVIRTUALIZED"
+  }
+  #launch_volume_attachments = <<Optional value not found in discovery>>
+  metadata = {
+    "ssh_authorized_keys" = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDA7FmSPqmQxQDnMpbEF1NApFKZNHJ/LNyIwGUgy5gUnN3ZrTotiS4z+H6F8uGrKxn4nBhbezqgMq2/Hva4LIGAqFyLEkyqUxzvwihAqEv4Jamf/M9ed6gjnIjm1WJF6qfMLDN24mEG3i2YHEUgFoOYetCqyDVijWgQcF0j/IpAmhwJkftnKFLJXs1Lmeg3F9D2rAY4Y5iNGcJzxOH+/XT2L/4o+XqE88WBzt5DGWUpPBzdsj770Er2X6Gdmp9USFFYyFMM7/YpPg8qUnXpApyUz6NO//a37c22M7AkSaX4g5kMevgdxFqYaiWF4eNWx1eC+4/jak+x5qV0BIEymmrl wilbur"
+  }
+  platform_config {
+    #are_virtual_instructions_enabled = <<Optional value not found in discovery>>
+    #config_map = <<Optional value not found in discovery>>
+    #is_access_control_service_enabled = <<Optional value not found in discovery>>
+    #is_input_output_memory_management_unit_enabled = <<Optional value not found in discovery>>
+    is_measured_boot_enabled             = "false"
+    is_memory_encryption_enabled         = "false"
+    is_secure_boot_enabled               = "false"
+    is_symmetric_multi_threading_enabled = "true"
+    is_trusted_platform_module_enabled   = "false"
+    #numa_nodes_per_socket = <<Optional value not found in discovery>>
+    #percentage_of_cores_enabled = <<Optional value not found in discovery>>
+    type = "AMD_VM"
+  }
+  #preserve_boot_volume = <<Optional value not found in discovery>>
+  #preserve_data_volumes_created_at_launch = <<Optional value not found in discovery>>
+  security_attributes = {
+  }
+  shape = "VM.Standard.E4.Flex"
+  shape_config {
+    baseline_ocpu_utilization = ""
+    memory_in_gbs             = "4"
+    nvmes                     = "0"
+    ocpus                     = "1"
+    vcpus                     = "2"
+  }
+  source_details {
+    #boot_volume_size_in_gbs = <<Optional value not found in discovery>>
+    boot_volume_vpus_per_gb = "10"
+    #instance_source_image_filter_details = <<Optional value not found in discovery>>
+    #is_preserve_boot_volume_enabled = <<Optional value not found in discovery>>
+    #kms_key_id = <<Optional value not found in discovery>>
+    source_id   = var.oci_core_instance--source_details-source_id--export_vm-test_3
+    source_type = "image"
+  }
+  state = "RUNNING"
   #update_operation_constraint = <<Optional value not found in discovery>>
 }
 
@@ -860,34 +1499,34 @@ resource oci_core_service_gateway export_oke-sgw-quick-OKE-Demo-2e4514f35 {
   vcn_id = oci_core_vcn.export_oke-vcn-quick-OKE-Demo-2e4514f35.id
 }
 
-resource oci_core_vnic_attachment export_vnicattachment20250919082725 {
+resource oci_core_vnic_attachment export_vnicattachment20250923165512 {
   create_vnic_details {
     #assign_ipv6ip = <<Optional value not found in discovery>>
     #assign_private_dns_record = <<Optional value not found in discovery>>
     assign_public_ip = "false"
     defined_tags = {
-      "default_tags.CreatedBy" = oci_containerengine_cluster.export_OKE-Demo.id
-      "default_tags.CreatedOn" = "2025-09-19T08:27:25.786Z"
+      "default_tags.CreatedBy" = oci_containerengine_cluster.export_Demo-OKE-US.id
+      "default_tags.CreatedOn" = "2025-09-23T16:55:12.498Z"
     }
-    display_name = "vnic20250919082728"
+    display_name = "vnic20250923165514"
     freeform_tags = {
       "CreatedBy"  = "CCM"
-      "InstanceId" = oci_core_instance.export_oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0_1.id
+      "InstanceId" = oci_core_instance.export_oke-crfols6nacq-n7v5y6wfi6a-s56tjf5wxja-0_1.id
     }
     #hostname_label = <<Optional value not found in discovery>>
     #ipv6address_ipv6subnet_cidr_pair_details = <<Optional value not found in discovery>>
     nsg_ids = [
     ]
-    private_ip = "10.0.0.3"
+    private_ip = "10.0.11.160"
     #route_table_id = <<Optional value not found in discovery>>
     security_attributes = {
     }
     skip_source_dest_check = "true"
-    subnet_id              = oci_core_subnet.export_oke-api-subnet.id
+    subnet_id              = oci_core_subnet.export_private-subnet.id
     #vlan_id = <<Optional value not found in discovery>>
   }
-  display_name = "vnicattachment20250919082725"
-  instance_id  = oci_core_instance.export_oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0_1.id
+  display_name = "vnicattachment20250923165512"
+  instance_id  = oci_core_instance.export_oke-crfols6nacq-n7v5y6wfi6a-s56tjf5wxja-0_1.id
   nic_index    = "0"
 }
 

@@ -26,11 +26,11 @@
                         </div>
                     </template>
                     <el-table :data="userList" style="width: 100%">
-                        <el-table-column prop="id" label="用户ID" width="80" />
-                        <el-table-column prop="username" label="用户名" width="180" />
-                        <el-table-column prop="email" label="邮箱" />
-                        <el-table-column prop="department" label="部门" width="120" />
-                        <el-table-column prop="create_time" label="创建时间" width="180" />
+                        <el-table-column prop="id" label="用户ID" width="80" ></el-table-column>
+                        <el-table-column prop="username" label="用户名" width="180" ></el-table-column>
+                        <el-table-column prop="email" label="邮箱" ></el-table-column>
+                        <el-table-column prop="department" label="部门" width="120" ></el-table-column>
+                        <el-table-column prop="create_time" label="创建时间" width="180" ></el-table-column>
                         <el-table-column prop="status" label="状态" width="80">
                             <template #default="scope">
                                 <el-tag :type="scope.row.status === 'active' ? 'success' : 'danger'">

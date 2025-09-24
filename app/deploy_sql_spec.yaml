@@ -1,0 +1,48 @@
+version: 0.1
+component: command
+timeoutInSeconds: 3600
+shell: bash
+failImmediatelyOnError: true
+env:
+  variables:
+    DB_USER: "${DB_USER}"
+    DB_PASSWORD: "${DB_PASSWORD}"
+    DB_DSN: "${DB_DSN}"
+    APP_VERSION: "${APP_VERSION}"
+
+inputArtifacts:
+  - name: "app-demo-sql"
+    type: "GENERIC_ARTIFACT"
+    registryId: "ocid1.artifactrepository.oc1.iad.0.amaaaaaaak7gbriaev2wihpkqknnbvvx2xm6oajzjf23kpzieoxt7gja2loa"
+    path: "sql/app.sql"
+    version: "${APP_VERSION}"
+    location:  "sql/app.sql"
+
+steps:
+  - type: Command
+    name: "Check SQL tool availability"
+    shell: bash
+    timeoutInSeconds: 300
+    failImmediatelyOnError: true
+    command: |
+      # Check SQL file
+      echo "Checking SQL tool availability..."
+      which sql
+      sql --version
+  
+  - type: Command
+    name: "Execute SQL script"
+    shell: bash
+    timeoutInSeconds: 900
+    failImmediatelyOnError: true
+    command: |
+      # Apply SQL file
+      echo "Executing SQL script: sql/app.sql"
+      echo "@sql/app.sql" | sql -s ${DB_USER}/${DB_PASSWORD}@${DB_DSN}
+      
+      if [ $? -eq 0 ]; then
+        echo "SQL script executed successfully"
+      else
+        echo "SQL script execution failed"
+        exit 1
+      fi

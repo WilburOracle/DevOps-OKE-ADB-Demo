@@ -25,6 +25,21 @@ resource oci_dns_resolver export_oke-vcn-quick-OKE-Demo-2e4514f35_2 {
   #scope = <<Optional value not found in discovery>>
 }
 
+resource oci_dns_zone export_vmtest-okedemo-oraclevcn-com {
+  compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
+  defined_tags = {
+    "default_tags.CreatedBy" = "oracleidentitycloudservice/wenbin.chen@oracle.com"
+    "default_tags.CreatedOn" = "2025-09-22T12:34:55.939Z"
+  }
+  dnssec_state = "DISABLED"
+  freeform_tags = {
+  }
+  name      = "vmtest.okedemo.oraclevcn.com"
+  scope     = "PRIVATE"
+  view_id   = oci_dns_view.export_oke-vcn-quick-OKE-Demo-2e4514f35_1.id
+  zone_type = "PRIMARY"
+}
+
 resource oci_dns_zone export_kf4c11fo-sube121c8a4a-okedemo-adb-us-ashburn-1-oraclevcn-com {
   compartment_id = oci_artifacts_container_configuration.export_container_configuration.id
   defined_tags = {
@@ -163,6 +178,66 @@ resource oci_dns_zone export_0-10-in-addr-arpa {
   zone_type = "PRIMARY"
 }
 
+resource oci_dns_rrset export_vmtest-okedemo-oraclevcn-com_vm--test-vmtest-okedemo-oraclevcn-com_A {
+  #compartment_id = <<Optional value not found in discovery>>
+  domain = "vm-test.vmtest.okedemo.oraclevcn.com"
+  items {
+    domain = "vm-test.vmtest.okedemo.oraclevcn.com"
+    rdata  = "10.0.50.245"
+    rtype  = "A"
+    ttl    = "300"
+  }
+  rtype = "A"
+  #scope = <<Optional value not found in discovery>>
+  #view_id = <<Optional value not found in discovery>>
+  zone_name_or_id = oci_dns_zone.export_vmtest-okedemo-oraclevcn-com.id
+}
+
+resource oci_dns_rrset export_vmtest-okedemo-oraclevcn-com_vmtest-okedemo-oraclevcn-com_NS {
+  #compartment_id = <<Optional value not found in discovery>>
+  domain = "vmtest.okedemo.oraclevcn.com"
+  items {
+    domain = "vmtest.okedemo.oraclevcn.com"
+    rdata  = "vcn-dns.oraclevcn.com."
+    rtype  = "NS"
+    ttl    = "86400"
+  }
+  rtype = "NS"
+  #scope = <<Optional value not found in discovery>>
+  #view_id = <<Optional value not found in discovery>>
+  zone_name_or_id = oci_dns_zone.export_vmtest-okedemo-oraclevcn-com.id
+}
+
+resource oci_dns_rrset export_vmtest-okedemo-oraclevcn-com_vmtest-okedemo-oraclevcn-com_SOA {
+  #compartment_id = <<Optional value not found in discovery>>
+  domain = "vmtest.okedemo.oraclevcn.com"
+  items {
+    domain = "vmtest.okedemo.oraclevcn.com"
+    rdata  = "vcn-dns.oraclevcn.com. hostmaster.oracle.com. 2 3600 3600 3600 10"
+    rtype  = "SOA"
+    ttl    = "86400"
+  }
+  rtype = "SOA"
+  #scope = <<Optional value not found in discovery>>
+  #view_id = <<Optional value not found in discovery>>
+  zone_name_or_id = oci_dns_zone.export_vmtest-okedemo-oraclevcn-com.id
+}
+
+resource oci_dns_rrset export_kf4c11fo-sube121c8a4a-okedemo-adb-us-ashburn-1-oraclevcn-com_kf4c11fo-sube121c8a4a-okedemo-adb-us--ashburn--1-oraclevcn-com_A {
+  #compartment_id = <<Optional value not found in discovery>>
+  domain = "kf4c11fo.sube121c8a4a.okedemo.adb.us-ashburn-1.oraclevcn.com"
+  items {
+    domain = "kf4c11fo.sube121c8a4a.okedemo.adb.us-ashburn-1.oraclevcn.com"
+    rdata  = "10.0.10.35"
+    rtype  = "A"
+    ttl    = "500"
+  }
+  rtype = "A"
+  #scope = <<Optional value not found in discovery>>
+  #view_id = <<Optional value not found in discovery>>
+  zone_name_or_id = oci_dns_zone.export_kf4c11fo-sube121c8a4a-okedemo-adb-us-ashburn-1-oraclevcn-com.id
+}
+
 resource oci_dns_rrset export_kf4c11fo-sube121c8a4a-okedemo-adb-us-ashburn-1-oraclevcn-com_kf4c11fo-sube121c8a4a-okedemo-adb-us--ashburn--1-oraclevcn-com_NS {
   #compartment_id = <<Optional value not found in discovery>>
   domain = "kf4c11fo.sube121c8a4a.okedemo.adb.us-ashburn-1.oraclevcn.com"
@@ -188,21 +263,6 @@ resource oci_dns_rrset export_kf4c11fo-sube121c8a4a-okedemo-adb-us-ashburn-1-ora
     ttl    = "86400"
   }
   rtype = "SOA"
-  #scope = <<Optional value not found in discovery>>
-  #view_id = <<Optional value not found in discovery>>
-  zone_name_or_id = oci_dns_zone.export_kf4c11fo-sube121c8a4a-okedemo-adb-us-ashburn-1-oraclevcn-com.id
-}
-
-resource oci_dns_rrset export_kf4c11fo-sube121c8a4a-okedemo-adb-us-ashburn-1-oraclevcn-com_kf4c11fo-sube121c8a4a-okedemo-adb-us--ashburn--1-oraclevcn-com_A {
-  #compartment_id = <<Optional value not found in discovery>>
-  domain = "kf4c11fo.sube121c8a4a.okedemo.adb.us-ashburn-1.oraclevcn.com"
-  items {
-    domain = "kf4c11fo.sube121c8a4a.okedemo.adb.us-ashburn-1.oraclevcn.com"
-    rdata  = "10.0.10.35"
-    rtype  = "A"
-    ttl    = "500"
-  }
-  rtype = "A"
   #scope = <<Optional value not found in discovery>>
   #view_id = <<Optional value not found in discovery>>
   zone_name_or_id = oci_dns_zone.export_kf4c11fo-sube121c8a4a-okedemo-adb-us-ashburn-1-oraclevcn-com.id
@@ -343,21 +403,6 @@ resource oci_dns_rrset export_kf4c11fo-sube121c8a4a-okedemo-adbapps-us-ashburn-1
   zone_name_or_id = oci_dns_zone.export_kf4c11fo-sube121c8a4a-okedemo-adbapps-us-ashburn-1-oraclevcn-com.id
 }
 
-resource oci_dns_rrset export_kf4c11fo-adb-us-ashburn-1-oraclecloudapps-com_kf4c11fo-adb-us--ashburn--1-oraclecloudapps-com_A {
-  #compartment_id = <<Optional value not found in discovery>>
-  domain = "kf4c11fo.adb.us-ashburn-1.oraclecloudapps.com"
-  items {
-    domain = "kf4c11fo.adb.us-ashburn-1.oraclecloudapps.com"
-    rdata  = "10.0.10.35"
-    rtype  = "A"
-    ttl    = "500"
-  }
-  rtype = "A"
-  #scope = <<Optional value not found in discovery>>
-  #view_id = <<Optional value not found in discovery>>
-  zone_name_or_id = oci_dns_zone.export_kf4c11fo-adb-us-ashburn-1-oraclecloudapps-com.id
-}
-
 resource oci_dns_rrset export_kf4c11fo-adb-us-ashburn-1-oraclecloudapps-com_kf4c11fo-adb-us--ashburn--1-oraclecloudapps-com_NS {
   #compartment_id = <<Optional value not found in discovery>>
   domain = "kf4c11fo.adb.us-ashburn-1.oraclecloudapps.com"
@@ -383,6 +428,21 @@ resource oci_dns_rrset export_kf4c11fo-adb-us-ashburn-1-oraclecloudapps-com_kf4c
     ttl    = "86400"
   }
   rtype = "SOA"
+  #scope = <<Optional value not found in discovery>>
+  #view_id = <<Optional value not found in discovery>>
+  zone_name_or_id = oci_dns_zone.export_kf4c11fo-adb-us-ashburn-1-oraclecloudapps-com.id
+}
+
+resource oci_dns_rrset export_kf4c11fo-adb-us-ashburn-1-oraclecloudapps-com_kf4c11fo-adb-us--ashburn--1-oraclecloudapps-com_A {
+  #compartment_id = <<Optional value not found in discovery>>
+  domain = "kf4c11fo.adb.us-ashburn-1.oraclecloudapps.com"
+  items {
+    domain = "kf4c11fo.adb.us-ashburn-1.oraclecloudapps.com"
+    rdata  = "10.0.10.35"
+    rtype  = "A"
+    ttl    = "500"
+  }
+  rtype = "A"
   #scope = <<Optional value not found in discovery>>
   #view_id = <<Optional value not found in discovery>>
   zone_name_or_id = oci_dns_zone.export_kf4c11fo-adb-us-ashburn-1-oraclecloudapps-com.id
@@ -433,6 +493,21 @@ resource oci_dns_rrset export_kf4c11fo-adb-us-ashburn-1-oraclecloud-com_kf4c11fo
   zone_name_or_id = oci_dns_zone.export_kf4c11fo-adb-us-ashburn-1-oraclecloud-com.id
 }
 
+resource oci_dns_rrset export_sube121c8a4a-okedemo-oraclevcn-com_pe--us--ashburn--1--49e278d5--888f--4c37--91b1--5c0390bff487-sube121c8a4a-okedemo-oraclevcn-com_A {
+  #compartment_id = <<Optional value not found in discovery>>
+  domain = "pe-us-ashburn-1-49e278d5-888f-4c37-91b1-5c0390bff487.sube121c8a4a.okedemo.oraclevcn.com"
+  items {
+    domain = "pe-us-ashburn-1-49e278d5-888f-4c37-91b1-5c0390bff487.sube121c8a4a.okedemo.oraclevcn.com"
+    rdata  = "10.0.10.35"
+    rtype  = "A"
+    ttl    = "300"
+  }
+  rtype = "A"
+  #scope = <<Optional value not found in discovery>>
+  #view_id = <<Optional value not found in discovery>>
+  zone_name_or_id = oci_dns_zone.export_sube121c8a4a-okedemo-oraclevcn-com.id
+}
+
 resource oci_dns_rrset export_sube121c8a4a-okedemo-oraclevcn-com_sube121c8a4a-okedemo-oraclevcn-com_NS {
   #compartment_id = <<Optional value not found in discovery>>
   domain = "sube121c8a4a.okedemo.oraclevcn.com"
@@ -453,7 +528,7 @@ resource oci_dns_rrset export_sube121c8a4a-okedemo-oraclevcn-com_sube121c8a4a-ok
   domain = "sube121c8a4a.okedemo.oraclevcn.com"
   items {
     domain = "sube121c8a4a.okedemo.oraclevcn.com"
-    rdata  = "vcn-dns.oraclevcn.com. hostmaster.oracle.com. 2 3600 3600 3600 10"
+    rdata  = "vcn-dns.oraclevcn.com. hostmaster.oracle.com. 74 3600 3600 3600 10"
     rtype  = "SOA"
     ttl    = "86400"
   }
@@ -463,12 +538,12 @@ resource oci_dns_rrset export_sube121c8a4a-okedemo-oraclevcn-com_sube121c8a4a-ok
   zone_name_or_id = oci_dns_zone.export_sube121c8a4a-okedemo-oraclevcn-com.id
 }
 
-resource oci_dns_rrset export_sube121c8a4a-okedemo-oraclevcn-com_pe--us--ashburn--1--49e278d5--888f--4c37--91b1--5c0390bff487-sube121c8a4a-okedemo-oraclevcn-com_A {
+resource oci_dns_rrset export_sube121c8a4a-okedemo-oraclevcn-com_oke--crfols6nacq--n7v5y6wfi6a--s56tjf5wxja--0-sube121c8a4a-okedemo-oraclevcn-com_A {
   #compartment_id = <<Optional value not found in discovery>>
-  domain = "pe-us-ashburn-1-49e278d5-888f-4c37-91b1-5c0390bff487.sube121c8a4a.okedemo.oraclevcn.com"
+  domain = "oke-crfols6nacq-n7v5y6wfi6a-s56tjf5wxja-0.sube121c8a4a.okedemo.oraclevcn.com"
   items {
-    domain = "pe-us-ashburn-1-49e278d5-888f-4c37-91b1-5c0390bff487.sube121c8a4a.okedemo.oraclevcn.com"
-    rdata  = "10.0.10.35"
+    domain = "oke-crfols6nacq-n7v5y6wfi6a-s56tjf5wxja-0.sube121c8a4a.okedemo.oraclevcn.com"
+    rdata  = "10.0.10.71"
     rtype  = "A"
     ttl    = "300"
   }
@@ -478,11 +553,11 @@ resource oci_dns_rrset export_sube121c8a4a-okedemo-oraclevcn-com_pe--us--ashburn
   zone_name_or_id = oci_dns_zone.export_sube121c8a4a-okedemo-oraclevcn-com.id
 }
 
-resource oci_dns_rrset export_subdc780b2fa-okedemo-oraclevcn-com_oke--cgnjnagsaqq--nooqmmoqf7a--s2sjo3cxluq--0-subdc780b2fa-okedemo-oraclevcn-com_A {
+resource oci_dns_rrset export_subdc780b2fa-okedemo-oraclevcn-com_crfols6nacq-subdc780b2fa-okedemo-oraclevcn-com_A {
   #compartment_id = <<Optional value not found in discovery>>
-  domain = "oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0.subdc780b2fa.okedemo.oraclevcn.com"
+  domain = "crfols6nacq.subdc780b2fa.okedemo.oraclevcn.com"
   items {
-    domain = "oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0.subdc780b2fa.okedemo.oraclevcn.com"
+    domain = "crfols6nacq.subdc780b2fa.okedemo.oraclevcn.com"
     rdata  = "10.0.0.5"
     rtype  = "A"
     ttl    = "300"
@@ -513,26 +588,11 @@ resource oci_dns_rrset export_subdc780b2fa-okedemo-oraclevcn-com_subdc780b2fa-ok
   domain = "subdc780b2fa.okedemo.oraclevcn.com"
   items {
     domain = "subdc780b2fa.okedemo.oraclevcn.com"
-    rdata  = "vcn-dns.oraclevcn.com. hostmaster.oracle.com. 3 3600 3600 3600 10"
+    rdata  = "vcn-dns.oraclevcn.com. hostmaster.oracle.com. 10 3600 3600 3600 10"
     rtype  = "SOA"
     ttl    = "86400"
   }
   rtype = "SOA"
-  #scope = <<Optional value not found in discovery>>
-  #view_id = <<Optional value not found in discovery>>
-  zone_name_or_id = oci_dns_zone.export_subdc780b2fa-okedemo-oraclevcn-com.id
-}
-
-resource oci_dns_rrset export_subdc780b2fa-okedemo-oraclevcn-com_cgnjnagsaqq-subdc780b2fa-okedemo-oraclevcn-com_A {
-  #compartment_id = <<Optional value not found in discovery>>
-  domain = "cgnjnagsaqq.subdc780b2fa.okedemo.oraclevcn.com"
-  items {
-    domain = "cgnjnagsaqq.subdc780b2fa.okedemo.oraclevcn.com"
-    rdata  = "10.0.0.4"
-    rtype  = "A"
-    ttl    = "300"
-  }
-  rtype = "A"
   #scope = <<Optional value not found in discovery>>
   #view_id = <<Optional value not found in discovery>>
   zone_name_or_id = oci_dns_zone.export_subdc780b2fa-okedemo-oraclevcn-com.id
@@ -568,6 +628,36 @@ resource oci_dns_rrset export_lbsub9865bec50-okedemo-oraclevcn-com_lbsub9865bec5
   zone_name_or_id = oci_dns_zone.export_lbsub9865bec50-okedemo-oraclevcn-com.id
 }
 
+resource oci_dns_rrset export_0-10-in-addr-arpa_5-0-0-10-in--addr-arpa_PTR {
+  #compartment_id = <<Optional value not found in discovery>>
+  domain = "5.0.0.10.in-addr.arpa"
+  items {
+    domain = "5.0.0.10.in-addr.arpa"
+    rdata  = "crfols6nacq.subdc780b2fa.okedemo.oraclevcn.com."
+    rtype  = "PTR"
+    ttl    = "300"
+  }
+  rtype = "PTR"
+  #scope = <<Optional value not found in discovery>>
+  #view_id = <<Optional value not found in discovery>>
+  zone_name_or_id = oci_dns_zone.export_0-10-in-addr-arpa.id
+}
+
+resource oci_dns_rrset export_0-10-in-addr-arpa_71-10-0-10-in--addr-arpa_PTR {
+  #compartment_id = <<Optional value not found in discovery>>
+  domain = "71.10.0.10.in-addr.arpa"
+  items {
+    domain = "71.10.0.10.in-addr.arpa"
+    rdata  = "oke-crfols6nacq-n7v5y6wfi6a-s56tjf5wxja-0.sube121c8a4a.okedemo.oraclevcn.com."
+    rtype  = "PTR"
+    ttl    = "300"
+  }
+  rtype = "PTR"
+  #scope = <<Optional value not found in discovery>>
+  #view_id = <<Optional value not found in discovery>>
+  zone_name_or_id = oci_dns_zone.export_0-10-in-addr-arpa.id
+}
+
 resource oci_dns_rrset export_0-10-in-addr-arpa_0-10-in--addr-arpa_NS {
   #compartment_id = <<Optional value not found in discovery>>
   domain = "0.10.in-addr.arpa"
@@ -588,11 +678,26 @@ resource oci_dns_rrset export_0-10-in-addr-arpa_0-10-in--addr-arpa_SOA {
   domain = "0.10.in-addr.arpa"
   items {
     domain = "0.10.in-addr.arpa"
-    rdata  = "vcn-dns.oraclevcn.com. hostmaster.oracle.com. 4 3600 3600 3600 10"
+    rdata  = "vcn-dns.oraclevcn.com. hostmaster.oracle.com. 84 3600 3600 3600 10"
     rtype  = "SOA"
     ttl    = "86400"
   }
   rtype = "SOA"
+  #scope = <<Optional value not found in discovery>>
+  #view_id = <<Optional value not found in discovery>>
+  zone_name_or_id = oci_dns_zone.export_0-10-in-addr-arpa.id
+}
+
+resource oci_dns_rrset export_0-10-in-addr-arpa_245-50-0-10-in--addr-arpa_PTR {
+  #compartment_id = <<Optional value not found in discovery>>
+  domain = "245.50.0.10.in-addr.arpa"
+  items {
+    domain = "245.50.0.10.in-addr.arpa"
+    rdata  = "vm-test.vmtest.okedemo.oraclevcn.com."
+    rtype  = "PTR"
+    ttl    = "300"
+  }
+  rtype = "PTR"
   #scope = <<Optional value not found in discovery>>
   #view_id = <<Optional value not found in discovery>>
   zone_name_or_id = oci_dns_zone.export_0-10-in-addr-arpa.id
@@ -604,36 +709,6 @@ resource oci_dns_rrset export_0-10-in-addr-arpa_35-10-0-10-in--addr-arpa_PTR {
   items {
     domain = "35.10.0.10.in-addr.arpa"
     rdata  = "pe-us-ashburn-1-49e278d5-888f-4c37-91b1-5c0390bff487.sube121c8a4a.okedemo.oraclevcn.com."
-    rtype  = "PTR"
-    ttl    = "300"
-  }
-  rtype = "PTR"
-  #scope = <<Optional value not found in discovery>>
-  #view_id = <<Optional value not found in discovery>>
-  zone_name_or_id = oci_dns_zone.export_0-10-in-addr-arpa.id
-}
-
-resource oci_dns_rrset export_0-10-in-addr-arpa_4-0-0-10-in--addr-arpa_PTR {
-  #compartment_id = <<Optional value not found in discovery>>
-  domain = "4.0.0.10.in-addr.arpa"
-  items {
-    domain = "4.0.0.10.in-addr.arpa"
-    rdata  = "cgnjnagsaqq.subdc780b2fa.okedemo.oraclevcn.com."
-    rtype  = "PTR"
-    ttl    = "300"
-  }
-  rtype = "PTR"
-  #scope = <<Optional value not found in discovery>>
-  #view_id = <<Optional value not found in discovery>>
-  zone_name_or_id = oci_dns_zone.export_0-10-in-addr-arpa.id
-}
-
-resource oci_dns_rrset export_0-10-in-addr-arpa_5-0-0-10-in--addr-arpa_PTR {
-  #compartment_id = <<Optional value not found in discovery>>
-  domain = "5.0.0.10.in-addr.arpa"
-  items {
-    domain = "5.0.0.10.in-addr.arpa"
-    rdata  = "oke-cgnjnagsaqq-nooqmmoqf7a-s2sjo3cxluq-0.subdc780b2fa.okedemo.oraclevcn.com."
     rtype  = "PTR"
     ttl    = "300"
   }

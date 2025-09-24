@@ -168,7 +168,7 @@ resource oci_database_autonomous_database export_ADB-Demo {
   # Required attributes that were not found in discovery have been added to lifecycle ignore_changes
   # This is done to avoid terraform plan failure for the existing infrastructure
   lifecycle {
-    ignore_changes = [db_tools_details[0].name, db_tools_details[1].name, db_tools_details[3].name, db_tools_details[6].name]
+    ignore_changes = [db_tools_details[3].name, db_tools_details[6].name, db_tools_details[0].name, db_tools_details[1].name]
   }
 }
 

@@ -6,8 +6,8 @@ import oracledb
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 
-# 应用版本号
-APP_VERSION = "1.0.0"
+# 从配置文件导入应用版本号
+from config import APP_VERSION
 
 app = FastAPI(title="用户管理系统", version=APP_VERSION)
 

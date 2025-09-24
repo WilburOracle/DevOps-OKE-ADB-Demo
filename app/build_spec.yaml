@@ -1,0 +1,123 @@
+version: 0.1
+component: build
+timeoutInSeconds: 3600
+shell: bash
+failImmediatelyOnError: true
+
+steps:
+  - type: Command
+    name: "读取应用版本号"
+    shell: bash
+    timeoutInSeconds: 300
+    failImmediatelyOnError: true
+    command: |
+      # 读取配置文件中的应用版本号
+      APP_VERSION=$(cat server/config.py | grep APP_VERSION | cut -d '"' -f 2)
+      echo "Application version: $APP_VERSION"
+      # 保存到环境变量中供后续步骤使用
+      echo "export APP_VERSION=$APP_VERSION" >> /tmp/app_env.sh
+  
+  - type: Command
+    name: "生成应用清单文件"
+    shell: bash
+    timeoutInSeconds: 300
+    failImmediatelyOnError: true
+    command: |
+      # 加载环境变量
+      source /tmp/app_env.sh
+      echo "Generating application manifest file with version $APP_VERSION"
+      
+      # 从模板文件生成app-demo.yaml，替换所有环境变量占位符
+      sed "s/<<APP_VERSION>>/$APP_VERSION/g" app-demo-template.yaml | \
+      sed "s/<<DB_USER>>/${DB_USER}/g" | \
+      sed "s/<<DB_PASSWORD>>/${DB_PASSWORD}/g" | \
+      sed "s/<<DB_DSN>>/${DB_DSN}/g" > app-demo.yaml
+      
+      echo "Application manifest file generated successfully: app-demo.yaml"
+      ls -la app-demo.yaml
+      cat app-demo.yaml
+  
+  - type: Command
+    name: "生成SQL脚本"
+    shell: bash
+    timeoutInSeconds: 300
+    failImmediatelyOnError: true
+    command: |
+      # 加载环境变量
+      source /tmp/app_env.sh
+      echo "Generating SQL script with version $APP_VERSION"
+      
+      # 从模板生成临时SQL脚本
+      if [ ! -f sql/app-${APP_VERSION}.sql ]; then
+        echo "SQL file sql/app-${APP_VERSION}.sql does not exist, generating..."
+        sed "s/<<APP_VERSION>>/$APP_VERSION/g" sql/sql_template.sql > sql/app-${APP_VERSION}.sql
+      else
+        echo "SQL file sql/app-${APP_VERSION}.sql already exists, skipping generation."
+      fi
+      
+      cp sql/app-${APP_VERSION}.sql sql/app.sql
+
+      echo "SQL script generated successfully:" 
+      ls -la sql/app.sql sql/app-${APP_VERSION}.sql
+      cat sql/app-${APP_VERSION}.sql
+  
+  
+  - type: Command
+    name: "创建SQL运行命令脚本并打包"
+    shell: bash
+    timeoutInSeconds: 300
+    failImmediatelyOnError: true
+    command: |
+      # 加载环境变量
+      source /tmp/app_env.sh
+      
+      echo "Creating SQL execution command script..."
+      
+      # 创建包含SQL运行命令的shell脚本，直接将变量值写入文件
+      SQL_RUN_CMD_FILE="run-sql-command.sh"
+      echo "sql '${DB_USER}/${DB_PASSWORD}@${DB_DSN}' @sql/app-${APP_VERSION}.sql" > $SQL_RUN_CMD_FILE
+      
+      # 设置脚本为可执行
+      chmod +x $SQL_RUN_CMD_FILE
+      
+      # 打包文件为zip
+      ZIP_FILE="app-sql.zip"
+      zip -r $ZIP_FILE sql/app-${APP_VERSION}.sql $SQL_RUN_CMD_FILE
+      
+      echo "Package created successfully: $ZIP_FILE"
+      ls -la $ZIP_FILE
+      
+      # 将zip文件路径保存到环境变量供后续使用
+      echo "export SQL_PACKAGE_ZIP=$ZIP_FILE" >> /tmp/app_env.sh
+
+  - type: Command
+    name: "Build Docker image"
+    shell: bash
+    timeoutInSeconds: 900
+    failImmediatelyOnError: true
+    command: |
+      # 加载环境变量
+      source /tmp/app_env.sh
+      
+      # 构建Docker镜像
+      echo "Building Docker image(app-demo-image:$APP_VERSION)..."
+      docker build -t app-demo-image:$APP_VERSION .
+      docker tag app-demo-image:$APP_VERSION app-demo-image:latest
+      
+      if [ $? -eq 0 ]; then
+        echo "Docker image built successfully"
+      else
+        echo "Docker image build failed"
+        exit 1
+      fi
+
+outputArtifacts:
+  - name: "app-demo-image"
+    type: "DOCKER_IMAGE"
+    location: "app-demo-image"
+  - name: "app-demo-manifest"
+    type: "BINARY"
+    location: "app-demo.yaml"
+  - name: "app-demo-sql-zip"
+    type: "BINARY"
+    location: "app-sql.zip"
