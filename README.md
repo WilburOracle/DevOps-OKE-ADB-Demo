@@ -1,12 +1,8 @@
 # OCI DevOps-OKE-ADB Demo
 部署
 
-[
-![Deploy to Oracle Cloud]
-(https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)
-]
-(https://cloud.oracle.com/resourcemanager/stacks/create
-?zipUrl=https://github.com/WilburOracle/DevOps-OKE-ADB-Demo/releases/download/0.0.1/oke_adb_tf.zip)
+
+[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/WilburOracle/DevOps-OKE-ADB-Demo/releases/download/0.0.1/oke_adb_tf.zip)
 
 
 This repository demonstrates an automated process for creating Oracle Cloud Infrastructure (OCI) resources using Terraform and implementing CI/CD pipelines with OCI DevOps to deploy applications to Oracle Kubernetes Engine (OKE) with an Autonomous Database (ADB) backend.
