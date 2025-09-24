@@ -36,8 +36,9 @@ COMMENT ON COLUMN app_info.created_at IS '创建时间';
 COMMENT ON COLUMN app_info.updated_at IS '更新时间';
 
 -- 创建索引以提高查询性能
-CREATE INDEX idx_accounts_username ON accounts(username);
-CREATE INDEX idx_accounts_email ON accounts(email);
+-- 注意：username和email列已有UNIQUE约束，Oracle会自动创建索引，不需要再显式创建
+-- CREATE INDEX idx_accounts_username ON accounts(username);
+-- CREATE INDEX idx_accounts_email ON accounts(email);
 CREATE INDEX idx_accounts_status ON accounts(status);
 
 -- 插入初始版本信息

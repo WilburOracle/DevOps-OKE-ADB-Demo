@@ -17,7 +17,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # 数据库配置
 DB_USER = os.environ.get('DB_USER', 'admin')
 DB_PASSWORD = os.environ.get('DB_PASSWORD', 'Oracle1234567')
-DB_DSN = os.environ.get('DB_DSN', 'adb_connection_string')
+DB_DSN = os.environ.get('DB_DSN', '(description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1521)(host=kf4c11fo.adb.us-ashburn-1.oraclecloud.com))(connect_data=(service_name=n7djxxqbnkflnvn_adbdemo_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=no)))')
 
 # 数据库连接池
 pool = None
@@ -33,7 +33,6 @@ def init_db_pool():
             min=2,
             max=10,
             increment=1,
-            encoding="UTF-8",
             edition=None,
             events=False,
             homogeneous=True,
@@ -46,8 +45,7 @@ def init_db_pool():
             cclass=None,
             purity=oracledb.PURITY_DEFAULT,
             wait_timeout=None,
-            max_lifetime_session=0,
-            max_idle_time_session=0
+            max_lifetime_session=0
         )
         print("数据库连接池初始化成功")
         return True
