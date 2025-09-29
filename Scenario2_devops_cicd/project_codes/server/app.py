@@ -141,21 +141,13 @@ async def get_accounts() -> Dict[str, Any]:
                     
                     # 如果没有数据，返回模拟数据
                     if not users:
-                        users = [
-                            {"id": 1, "username": "admin", "email": "admin@example.com", "department": "管理员", "create_time": "2023-01-01 10:00:00", "status": "active"},
-                            {"id": 2, "username": "user1", "email": "user1@example.com", "department": "开发部", "create_time": "2023-01-02 11:30:00", "status": "active"},
-                            {"id": 3, "username": "user2", "email": "user2@example.com", "department": "测试部", "create_time": "2023-01-03 14:15:00", "status": "active"}
-                        ]
+                        users =  [{"id": 0, "username": "没有用户", "email": "", "department": "", "create_time": "", "status": "inactive"}]
                         
                     return {"success": True, "data": users}
                 except oracledb.Error as e:
                     print(f"查询用户数据失败: {e}")
                     # 表不存在或其他数据库错误时返回模拟数据
-                    users = [
-                        {"id": 1, "username": "admin", "email": "admin@example.com", "department": "管理员", "create_time": "2023-01-01 10:00:00", "status": "active"},
-                        {"id": 2, "username": "user1", "email": "user1@example.com", "department": "开发部", "create_time": "2023-01-02 11:30:00", "status": "active"},
-                        {"id": 3, "username": "user2", "email": "user2@example.com", "department": "测试部", "create_time": "2023-01-03 14:15:00", "status": "active"}
-                    ]
+                    users = [{"id": 1, "username": "表查询出错", "email": "表查询出错", "department": "表查询出错", "create_time": "表查询出错", "status": "inactive"}]
                     return {"success": True, "data": users}
     except Exception as e:
         print(f"获取用户列表失败: {e}")

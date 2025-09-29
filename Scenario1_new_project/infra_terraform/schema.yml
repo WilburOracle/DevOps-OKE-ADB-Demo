@@ -164,7 +164,7 @@ variables:
   worker_ocpus:
     title: OCPUs
     type: number
-    default: 2
+    default: 1
     required: false
   worker_memory:
     title: Memory (GB)

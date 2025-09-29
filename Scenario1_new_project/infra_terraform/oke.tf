@@ -33,8 +33,13 @@ module "oke" {
   preferred_load_balancer = lower(var.preferred_load_balancer)
 
   control_plane_is_public = true
+  control_plane_allowed_cidrs  = ["0.0.0.0/0"]
   assign_public_ip_to_control_plane = true
   worker_is_public = false
+
+  allow_node_port_access       = true
+  allow_worker_internet_access = true
+  allow_worker_ssh_access      = true
   
 
   # Workers
@@ -90,13 +95,13 @@ resource "local_file" "kube_config_public" {
   file_permission = "0600"
 }
 
-resource "null_resource" "oke_initialization" {
+resource "null_resource" "oke_initialization2" {
   depends_on = [oci_database_autonomous_database.tf_database_autonomous_database, module.oke.cluster_kubeconfig]
 
   provisioner "local-exec" {
     command = <<EOT
       sed "s/<<APP_VERSION>>/1.0.0/g" init/app-demo-template.yaml | \
-      sed "s/<<DB_USER>>/admin/g" | \
+      sed "s/<<DB_USER>>/ouser/g" | \
       sed "s/<<DB_PASSWORD>>/Oracle1234567/g" | \
       sed "s/<<DB_HOST>>/${local.adb_host}/g" | \
       sed "s/<<DB_SERVICE_NAME>>/${local.adb_service_name}/g" > init/app-demo.yaml
@@ -108,6 +113,14 @@ resource "null_resource" "oke_initialization" {
 
 output "oke_cluster_id" {
   value = module.oke.cluster_id
+}
+
+output "oke_name" {
+  value = var.cluster_name
+}
+
+output "vcn_name" {
+  value = var.vcn_name
 }
 
 output "kubeconfig" {

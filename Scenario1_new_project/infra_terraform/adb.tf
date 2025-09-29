@@ -18,18 +18,20 @@ resource "oci_database_autonomous_database" "tf_database_autonomous_database" {
 
 locals {
   adb_dsn = [for p in oci_database_autonomous_database.tf_database_autonomous_database.connection_strings[0].profiles : p.value if p.consumer_group == "HIGH" && p.tls_authentication == "MUTUAL"][0]
-  adb_conn_str = oci_database_autonomous_database.tf_database_autonomous_database.connection_strings.high
+  adb_conn_str = oci_database_autonomous_database.tf_database_autonomous_database.connection_strings[0].high
   # adb_conn_str的值是 adb.us-ashburn-1.oraclecloud.com:1522/n7djxxqbnkflnvn_demoadbus3_high.adb.oraclecloud.com
   adb_host = split(":", local.adb_conn_str)[0]
   adb_service_name = split("/", local.adb_conn_str)[1]
 }
 # 在ADB创建成功后执行初始化脚本
-resource "null_resource" "adb_initialization" {
+resource "null_resource" "adb_initialization2" {
   depends_on = [oci_database_autonomous_database.tf_database_autonomous_database]
 
   provisioner "local-exec" {
     command = <<EOT
-      sql 'ouser/Oracle1234567@${local.adb_dsn}' @init/adb-init.sql
+      sql 'admin/Oracle1234567@${local.adb_dsn}' @init/adb-init.sql
+      sql 'ouser/Oracle1234567@${local.adb_dsn}' @init/app-1.0.0.sql
+      sql 'ouser/Oracle1234567@${local.adb_dsn}' @init/app-2.0.0.sql
     EOT
   }
 }
