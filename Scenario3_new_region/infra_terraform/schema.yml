@@ -1,0 +1,315 @@
+title: "DevOps Application Deployment"
+description: "Setup prerequisites (Autonomous Database, OKE, Load Balancer, etc.)"
+informationalText: "This stack Creates all resources needed for DevOps Application Deployment"
+schemaVersion: 1.1.0
+version: "2.1"
+locale: "en"
+variableGroups:
+  - title: "Identity"
+    variables:
+      - region
+      - tenancy_ocid
+      - compartment_ocid
+      - user_ocid
+      - api_private_key_path
+      - api_fingerprint
+    visible: true
+
+  - title: "OKE"
+    variables:
+      - cluster_type
+      - cluster_name
+      - cni_type
+      - vcn_name
+      - load_balancers
+      - preferred_load_balancer
+      - kubernetes_version
+      - worker_pool_name
+      - worker_pool_mode
+      - worker_pool_size
+      - worker_shape
+      - worker_ocpus
+      - worker_memory
+      - worker_boot_volume_size
+      - create_bastion
+      - create_operator
+
+  - title: "SSH"
+    #visible: ${create_bastion}
+    variables:
+      - ssh_public_key
+      - ssh_kms_vault_id
+      - ssh_kms_secret_id
+
+  - title: "Database Configuration"
+    variables:
+      - db_display_name
+      - db_name
+      - db_version
+      - db_workload
+      - db_compute_count
+      - db_data_storage_size_in_tbs
+      - db_compute_model
+      - db_license_model
+  
+  - title: "Database Security"
+    variables:
+      - db_password
+      - db_is_mtls_connection_required
+  
+  - title: "Database High Availability"
+    variables:
+      - db_is_dedicated
+      - db_is_data_guard_enabled
+      - db_is_local_data_guard_enabled
+
+
+variables:
+  region:
+    type: oci:identity:region:name
+    required: true
+    title: "Region"
+    visible: true
+  tenancy_ocid:
+    type: string
+    required: true
+    title: "Tenancy"
+    visible: false
+  compartment_ocid:
+    type: oci:identity:compartment:id
+    required: true
+    title: "Compartment"
+    visible: true
+  user_ocid:
+    type: string
+    default: ${current_user_ocid}
+    required: true
+    title: "User"
+    visible: false
+  api_private_key_path:
+    visible: false
+  api_fingerprint:
+    visible: false
+
+# OKE
+  cluster_name:
+    title: Cluster name
+    description: Display name for the created cluster. Defaults to 'oke' suffixed with the generated Terraform 'state_id' value.
+    type: string
+    required: false
+  cluster_type:
+    title: Cluster Type
+    type: enum
+    default: Basic
+    enum: [Basic, Enhanced]
+    allowMultiple: false
+    required: true
+  cni_type:
+    title: CNI Type
+    type: enum
+    default: Flannel
+    enum: [Flannel, NPN]
+    allowMultiple: false
+    required: true
+  kubernetes_version:
+    type: oci:kubernetes:versions:id
+    title: Kubernetes version
+    description: The Kubernetes version for the created OKE cluster and managed nodes.
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      clusterOptionId: "all"
+  preferred_load_balancer:
+    title: Preferred load balancer
+    type: enum
+    default: Public
+    enum: [Internal, Public]
+    allowMultiple: false
+    required: true
+  load_balancers:
+    title: Load balancers
+    type: enum
+    enum: [Public, Internal, Both]
+    default: Public
+    required: true
+  
+  # Worker
+  worker_pool_name:
+    title: Pool name
+    description: Display name for created worker node resources.
+    type: string
+    default: "oke-worker"
+    required: true
+  worker_pool_mode:
+    title: Resource type
+    description: Type of Oracle Cloud Compute resources for the created worker nodes.
+    type: enum
+    default: Node Pool
+    enum: [Node Pool, Instances, Instance Pool, Cluster Network]
+    required: true
+    visible: true
+  worker_pool_size:
+    title: Number of worker nodes
+    type: number
+    default: 1
+    required: true
+  worker_shape:
+    title: Shape
+    # type: oci:core:instanceshapewithflex:name
+    type: oci:core:instanceshape:name
+    default: "VM.Standard.E4.Flex"
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+  worker_ocpus:
+    title: OCPUs
+    type: number
+    default: 2
+    required: false
+  worker_memory:
+    title: Memory (GB)
+    type: number
+    default: 16
+    required: false
+  worker_boot_volume_size:
+    title: Boot volume size (GB)
+    type: number
+    required: false
+
+
+
+# SSH
+  ssh_public_key:
+    title: SSH Public Key
+    type: oci:core:ssh:publickey
+    pattern: "((^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)(,((ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)*$"
+    required: false
+  ssh_kms_vault_id:
+    title: SSH Vault
+    description: The OCI Vault used to encrypt the SSH key pair.
+    type: oci:kms:vault:id
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    #visible: ${create_bastion}
+  ssh_kms_secret_id:
+    title: SSH Vault secret
+    description: The OCI Vault secret containing the SSH private key.
+    type: oci:kms:secret:id
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vaultId: ${ssh_kms_vault_id}
+    #visible: ${create_bastion}
+
+
+# ADB
+    # Database Configuration
+  db_name:
+    title: Database Name
+    description: The database name. The name must begin with an alphabetic character and can contain a maximum of 14 alphanumeric characters. Special characters are not permitted.
+    type: string
+    required: true
+    minLength: 1
+    maxLength: 14
+    pattern: ^[A-Za-z][A-Za-z0-9]{0,13}$
+  
+  db_display_name:
+    title: Display Name
+    description: The user-friendly name for the Autonomous Database.
+    type: string
+    required: true
+  
+  db_version:
+    title: Database Version
+    description: The database version.
+    type: string
+    required: false
+    visible: false
+    enum: [19c, 23ai]
+    default: "19c"
+  
+  db_workload:
+    title: Database Workload Type
+    description: The database workload type. OLTP for transaction processing, DW for data warehouse, AJD for JSON database, APEX for APEX applications.
+    type: enum
+    required: true
+    enum: [OLTP, DW, AJD, APEX]
+    default: "DW"
+  
+  db_compute_count:
+    title: Compute Count
+    description: The number of OCPUs to be allocated to the database.
+    type: number
+    required: true
+    minimum: 1
+    maximum: 128
+    default: 1
+  
+  db_data_storage_size_in_tbs:
+    title: Data Storage Size (TB)
+    description: The data storage size in terabytes.
+    type: number
+    required: true
+    minimum: 1
+    maximum: 128
+    default: 1
+  
+  db_compute_model:
+    title: Compute Model
+    description: The compute model. CPU for OCPU count, ECPU for ECPU count.
+    type: enum
+    required: true
+    enum: [CPU, ECPU]
+    default: "ECPU"
+  
+  db_license_model:
+    title: License Model
+    description: The license model. LICENSE_INCLUDED or BRING_YOUR_OWN_LICENSE.
+    type: enum
+    required: true
+    enum: [LICENSE_INCLUDED, BRING_YOUR_OWN_LICENSE]
+    default: "BRING_YOUR_OWN_LICENSE"
+  
+  # Database Security
+  db_password:
+    title: Admin Password
+    description: The password for the ADMIN user. Must be at least 12 characters long and contain at least one uppercase letter, one lowercase letter, and one numeric character.
+    type: password
+    required: true
+    minLength: 12
+    pattern: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{12,}$
+  
+  db_is_mtls_connection_required:
+    title: Require MTLS Connection
+    description: Specifies if mutual TLS is required for the database connection.
+    type: boolean
+    required: false
+    default: false
+    visible: false
+  
+  # Database High Availability (Advanced Options)
+  db_is_dedicated:
+    title: Dedicated Infrastructure
+    description: Specifies if the database is on dedicated infrastructure.
+    type: boolean
+    required: false
+    default: false
+    visible: false
+  
+  db_is_data_guard_enabled:
+    title: Enable Data Guard
+    description: Specifies if Data Guard is enabled for the database.
+    type: boolean
+    required: false
+    default: false
+    visible: false
+  
+  db_is_local_data_guard_enabled:
+    title: Enable Local Data Guard
+    description: Specifies if Local Data Guard is enabled for the database.
+    type: boolean
+    required: false
+    default: false
+    visible: false
+
