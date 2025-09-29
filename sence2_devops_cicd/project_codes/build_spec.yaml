@@ -1,0 +1,53 @@
+version: 0.1
+component: build
+timeoutInSeconds: 3600
+shell: bash
+failImmediatelyOnError: true
+
+steps:
+  - type: Command
+    name: "生成SQL脚本"
+    shell: bash
+    timeoutInSeconds: 300
+    failImmediatelyOnError: true
+    command: |
+
+      echo "生成SQL文件"
+      if [ ! -f sql/app-${APP_VERSION}.sql ]; then
+        echo "SQL file sql/app-${APP_VERSION}.sql does not exist, generating..."
+        sed "s/<<APP_VERSION>>/${APP_VERSION} /g" sql/sql_template.sql > sql/app-${APP_VERSION}.sql
+      else
+        echo "SQL file sql/app-${APP_VERSION}.sql already exists, skipping generation."
+      fi
+      
+      echo "生成SQL成功：" 
+      cp sql/app-${APP_VERSION}.sql app-demo-adb-sql.sql
+      cat app-demo-adb-sql.sql
+  
+
+  - type: Command
+    name: "编译 Docker image"
+    shell: bash
+    timeoutInSeconds: 900
+    failImmediatelyOnError: true
+    command: |
+      docker build -t app-demo-image:${APP_VERSION} .
+      docker tag app-demo-image:${APP_VERSION} app-demo-image:latest
+      
+      if [ $? -eq 0 ]; then
+        echo "Docker image built successfully"
+      else
+        echo "Docker image build failed"
+        exit 1
+      fi
+
+outputArtifacts:
+  - name: "app-demo-image"
+    type: "DOCKER_IMAGE"
+    location: "app-demo-image"
+  - name: "app-demo-oke-manifest"
+    type: "BINARY"
+    location: "app-demo-oke-manifest.yaml"
+  - name: "app-demo-adb-sql"
+    type: "BINARY"
+    location: "app-demo-adb-sql.sql"

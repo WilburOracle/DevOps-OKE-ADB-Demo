@@ -3,10 +3,10 @@
 
 -- 创建用户
 begin
-  execute immediate 'CREATE USER ouser IDENTIFIED BY ouser';
+  execute immediate 'CREATE USER ouser IDENTIFIED BY Oracle1234567';
   exception when others then
     if sqlcode = -1920 then
-      execute immediate 'ALTER USER ouser IDENTIFIED BY ouser';
+      execute immediate 'ALTER USER ouser IDENTIFIED BY Oracle1234567';
     else
       raise;
     end if;
@@ -23,6 +23,7 @@ grant create procedure to ouser;
 grant create sequence to ouser;
 
 alter user ouser quota unlimited on users;
+exit;
 
 -- 授予对现有表的操作权限（如果需要）
 -- grant select, insert, update, delete on schema_name.table_name to ouser;

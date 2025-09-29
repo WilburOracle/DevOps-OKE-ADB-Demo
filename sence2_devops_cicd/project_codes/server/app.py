@@ -1,23 +1,34 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 import os
 import oracledb
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 
-# 从配置文件导入应用版本号
-from config import APP_VERSION
+APP_VERSION = "1.0.0"
 
 app = FastAPI(title="用户管理系统", version=APP_VERSION)
+
+# 添加CORS中间件允许跨站访问
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 允许所有源
+    allow_credentials=True,
+    allow_methods=["*"],  # 允许所有HTTP方法
+    allow_headers=["*"],  # 允许所有HTTP头
+)
 
 # 挂载静态文件目录
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # 数据库配置
-DB_USER = os.environ.get('DB_USER', 'admin')
+DB_USER = os.environ.get('DB_USER', 'ouser')
 DB_PASSWORD = os.environ.get('DB_PASSWORD', 'Oracle1234567')
-DB_DSN = os.environ.get('DB_DSN', '(description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1521)(host=kf4c11fo.adb.us-ashburn-1.oraclecloud.com))(connect_data=(service_name=n7djxxqbnkflnvn_adbdemo_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=no)))')
+DB_HOST = os.environ.get('DB_HOST')
+DB_SERVICE_NAME = os.environ.get('DB_SERVICE_NAME')
+DB_DSN = f'(description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1521)(host={DB_HOST}))(connect_data=(service_name={DB_SERVICE_NAME}))(security=(ssl_server_dn_match=no)))'
 
 # 数据库连接池
 pool = None
@@ -157,4 +168,5 @@ async def read_root():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    # 允许从所有地址访问，端口使用8000以匹配Kubernetes配置
+    uvicorn.run(app, host="0.0.0.0", port=8000)
