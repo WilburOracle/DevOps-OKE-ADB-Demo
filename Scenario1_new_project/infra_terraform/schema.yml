@@ -63,6 +63,14 @@ variableGroups:
       - db_is_data_guard_enabled
       - db_is_local_data_guard_enabled
 
+  - title: "DevOps Configuration"
+    variables:
+      - devops_project_ocid
+      - devops_artifact_oke_manifest_ocid
+      - devops_artifact_adb_sql_ocid
+      - region_abbreviation
+      - app_version
+
 
 variables:
   region:
@@ -90,7 +98,7 @@ variables:
     visible: false
   api_fingerprint:
     visible: false
-
+  
 # OKE
   cluster_name:
     title: Cluster name
@@ -202,7 +210,6 @@ variables:
       vaultId: ${ssh_kms_vault_id}
     #visible: ${create_bastion}
 
-
 # ADB
     # Database Configuration
   db_name:
@@ -313,3 +320,39 @@ variables:
     default: false
     visible: false
 
+  # DevOps Variables
+  devops_project_ocid:
+    type: string
+    required: true
+    title: "DevOps Project OCID"
+    description: "OCID of the DevOps Project"
+    default: "ocid1.devopsproject.oc1.iad.amaaaaaaak7gbriaosygyx4igferuasez5j2o6sayy3lrslukrln6fn3lasq"
+    visible: false
+  devops_artifact_oke_manifest_ocid:
+    type: string
+    required: true
+    title: "OKE Manifest Artifact OCID"
+    description: "OCID of the OKE Manifest Artifact"
+    default: "ocid1.devopsdeployartifact.oc1.iad.amaaaaaaak7gbriaqrkypyrulpt2olacqwqdg53zb6atxpy2fahkswm7mhqq"
+    visible: false
+  devops_artifact_adb_sql_ocid:
+    type: string
+    required: true
+    title: "ADB SQL Artifact OCID"
+    description: "OCID of the ADB SQL Artifact"
+    default: "ocid1.devopsdeployartifact.oc1.iad.amaaaaaaak7gbriag423a37aigxn6yyln3ndjyqavdrvynb6zsvuzm6xl2na"
+    visible: false
+  app_version:
+    type: string
+    required: true
+    title: "Application Version"
+    description: "Version of the application to deploy"
+    default: "1.0.0"
+    visible: true
+  region_abbreviation:
+    type: string
+    required: true
+    title: "Region Abbreviation"
+    description: "Abbreviation for the region, e.g. us3 for us-ashburn-1"
+    default: "US"
+    visible: true
