@@ -67,7 +67,7 @@ variableGroups:
     variables:
       - devops_project_ocid
       - devops_artifact_oke_manifest_ocid
-      - devops_artifact_adb_sql_ocid
+      - devops_artifact_adb_sql_shell_ocid
       - region_abbreviation
       - app_version
 
@@ -335,12 +335,12 @@ variables:
     description: "OCID of the OKE Manifest Artifact"
     default: "ocid1.devopsdeployartifact.oc1.iad.amaaaaaaak7gbriaqrkypyrulpt2olacqwqdg53zb6atxpy2fahkswm7mhqq"
     visible: false
-  devops_artifact_adb_sql_ocid:
+  devops_artifact_adb_sql_shell_ocid:
     type: string
     required: true
-    title: "ADB SQL Artifact OCID"
-    description: "OCID of the ADB SQL Artifact"
-    default: "ocid1.devopsdeployartifact.oc1.iad.amaaaaaaak7gbriag423a37aigxn6yyln3ndjyqavdrvynb6zsvuzm6xl2na"
+    title: "Apply SQL Shell Artifact OCID"
+    description: "OCID of the ADB SQL Shell Artifact"
+    default: "ocid1.devopsdeployartifact.oc1.iad.amaaaaaaak7gbriau7zu7guipcsbhiiwx4zax6gjbwnaftyplz6wdthdwz5a"
     visible: false
   app_version:
     type: string

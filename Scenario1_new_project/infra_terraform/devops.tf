@@ -33,13 +33,14 @@ resource oci_devops_deploy_pipeline deploy_pipeline {
 }
 
 resource oci_devops_deploy_stage deploy_sql_stage {
-  command_spec_deploy_artifact_id = var.devops_artifact_adb_sql_ocid
+  command_spec_deploy_artifact_id = var.devops_artifact_adb_sql_shell_ocid
   container_config {
     compartment_id        = var.compartment_ocid
     container_config_type = "CONTAINER_INSTANCE_CONFIG"
     network_channel {
       network_channel_type = "SERVICE_VNIC_CHANNEL"
       nsg_ids = [
+        module.oke.worker_nsg_id
       ]
       subnet_id = module.oke.worker_subnet_id
     }

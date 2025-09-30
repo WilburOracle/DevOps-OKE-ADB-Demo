@@ -15,7 +15,8 @@ module "oke" {
 
   # Bastion
   create_bastion              = var.create_bastion
-
+  bastion_allowed_cidrs    = ["0.0.0.0/0"]
+  bastion_user             = "opc"
   # Operator
   create_operator                = var.create_operator
 
