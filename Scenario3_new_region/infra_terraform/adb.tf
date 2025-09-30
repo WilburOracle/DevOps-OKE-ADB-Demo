@@ -24,7 +24,7 @@ locals {
   adb_service_name = split("/", local.adb_conn_str)[1]
 }
 # 在ADB创建成功后执行初始化脚本
-resource "null_resource" "adb_initialization2" {
+resource "null_resource" "adb_initialization" {
   depends_on = [oci_database_autonomous_database.tf_database_autonomous_database]
 
   provisioner "local-exec" {

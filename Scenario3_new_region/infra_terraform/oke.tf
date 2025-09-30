@@ -96,7 +96,7 @@ resource "local_file" "kube_config_public" {
   file_permission = "0600"
 }
 
-resource "null_resource" "oke_initialization2" {
+resource "null_resource" "oke_initialization" {
   depends_on = [oci_database_autonomous_database.tf_database_autonomous_database, module.oke.cluster_kubeconfig]
 
   provisioner "local-exec" {
