@@ -4,7 +4,9 @@
 
 ## 项目概述
 
-本项目展示了在Oracle云基础设施(OCI)上使用Terraform自动化部署资源和通过OCI DevOps实现CI/CD流水线的完整流程，将应用程序部署到Oracle Kubernetes Engine (OKE)并连接到Autonomous Database (ADB)后端。
+本项目展示了在Oracle云基础设施(OCI)上使用Terraform自动化部署资源和通过OCI DevOps实现CI/CD流水线，将应用程序部署到Oracle Kubernetes Engine (OKE)并连接到Autonomous Database (ADB)后端。
+
+![Solution Architecture](README.assets/solution.jpeg)
 
 项目包含以下3个核心场景：
 
@@ -52,10 +54,6 @@
 
 一键部署：
 [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/WilburOracle/DevOps-OKE-ADB-Demo/releases/download/0.0.2/Scenario3_new_region.zip)
-
-## 项目架构图
-
-![Solution Architecture](README.assets/solution.jpeg)
 
 ## 项目结构
 

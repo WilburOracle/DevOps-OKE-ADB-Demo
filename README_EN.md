@@ -4,6 +4,8 @@
 
 This project demonstrates the complete process of automated resource deployment using Terraform on Oracle Cloud Infrastructure (OCI) and implementing CI/CD pipelines through OCI DevOps to deploy applications to Oracle Kubernetes Engine (OKE) connected to Autonomous Database (ADB) backend.
 
+![Solution Architecture](README.assets/solution.jpeg)
+
 The project includes the following 3 core scenarios:
 
 ## Scenario 1: New Project Environment Setup
@@ -50,10 +52,6 @@ Main features include:
 
 One-click deployment:
 [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/WilburOracle/DevOps-OKE-ADB-Demo/releases/download/0.0.2/Scenario3_new_region.zip)
-
-## Solution Architecture
-
-![Solution Architecture](README.assets/solution.jpeg)
 
 ## Project Structure
 
