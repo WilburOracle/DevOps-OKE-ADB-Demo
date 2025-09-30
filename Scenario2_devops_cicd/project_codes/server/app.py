@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 import oracledb
 from pydantic import BaseModel
-from typing import List, Optional, Dict, Any
+from typing import Dict, Any
 
 APP_VERSION = "1.0.0"
 

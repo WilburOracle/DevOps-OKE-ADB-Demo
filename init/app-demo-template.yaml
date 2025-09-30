@@ -1,0 +1,54 @@
+# App Demo Manifest
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-demo
+  labels:
+    app: app-demo
+    version: <<APP_VERSION>>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-demo
+  template:
+    metadata:
+      labels:
+        app: app-demo
+        version: <<APP_VERSION>>
+    spec:
+      containers:
+      - name: app-demo
+        image: iad.ocir.io/sehubjapacprod/wilbur/devops/app-demo-image:<<APP_VERSION>>
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DB_USER
+          value: "<<DB_USER>>"
+        - name: DB_PASSWORD
+          value: "<<DB_PASSWORD>>"
+        - name: DB_HOST
+          value: "<<DB_HOST>>"
+        - name: DB_SERVICE_NAME
+          value: "<<DB_SERVICE_NAME>>"
+        - name: APP_VERSION
+          value: "<<APP_VERSION>>"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-demo-service
+  labels:
+    app: app-demo
+    version: <<APP_VERSION>>
+  annotations:
+    service.beta.kubernetes.io/oci-load-balancer-security-list-management-mode: "All"
+spec:
+  selector:
+    app: app-demo
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: LoadBalancer
