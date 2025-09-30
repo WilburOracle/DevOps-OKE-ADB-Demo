@@ -30,8 +30,6 @@ resource "null_resource" "adb_initialization2" {
   provisioner "local-exec" {
     command = <<EOT
       sql 'admin/Oracle1234567@${local.adb_dsn}' @init/adb-init.sql
-      sql 'ouser/Oracle1234567@${local.adb_dsn}' @init/app-1.0.0.sql
-      sql 'ouser/Oracle1234567@${local.adb_dsn}' @init/app-2.0.0.sql
     EOT
   }
 }

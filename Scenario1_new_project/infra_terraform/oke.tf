@@ -96,22 +96,6 @@ resource "local_file" "kube_config_public" {
   file_permission = "0600"
 }
 
-resource "null_resource" "oke_initialization2" {
-  depends_on = [oci_database_autonomous_database.tf_database_autonomous_database, module.oke.cluster_kubeconfig]
-
-  provisioner "local-exec" {
-    command = <<EOT
-      sed "s/<<APP_VERSION>>/1.0.0/g" init/app-demo-template.yaml | \
-      sed "s/<<DB_USER>>/ouser/g" | \
-      sed "s/<<DB_PASSWORD>>/Oracle1234567/g" | \
-      sed "s/<<DB_HOST>>/${local.adb_host}/g" | \
-      sed "s/<<DB_SERVICE_NAME>>/${local.adb_service_name}/g" > init/app-demo.yaml
-      kubectl apply -f init/app-demo.yaml --kubeconfig init/kubeconfig
-    EOT
-  }
-}
-
-
 output "oke_cluster_id" {
   value = module.oke.cluster_id
 }
