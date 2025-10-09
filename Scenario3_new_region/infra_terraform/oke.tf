@@ -101,7 +101,7 @@ resource "null_resource" "oke_initialization" {
 
   provisioner "local-exec" {
     command = <<EOT
-      sed "s/<<APP_VERSION>>/1.0.0/g" init/app-demo-template.yaml | \
+      sed "s/<<APP_VERSION>>/${local.adb_host}/g" init/app-demo-template.yaml | \
       sed "s/<<DB_USER>>/ouser/g" | \
       sed "s/<<DB_PASSWORD>>/Oracle1234567/g" | \
       sed "s/<<DB_HOST>>/${local.adb_host}/g" | \
