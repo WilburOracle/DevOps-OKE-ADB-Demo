@@ -1,40 +1,40 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>用户管理系统</title>
+    <title>User Management System</title>
     <!-- Vue 3 -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <!-- Element Plus -->
     <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
     <script src="https://unpkg.com/element-plus"></script>
-    <!-- Element Plus 图标 -->
+    <!-- Element Plus Icons -->
     <script src="https://unpkg.com/@element-plus/icons-vue"></script>
 </head>
 <body>
     <div id="app">
         <el-container style="height: 100vh; padding: 20px;">
             <el-header style="text-align: center;">
-                <h1>用户管理系统</h1>
+                <h1>User Management System</h1>
             </el-header>
             <el-main>
                 <el-card>
                     <template #header>
                         <div class="card-header">
-                            <span>用户列表</span>
+                            <span>User List</span>
                         </div>
                     </template>
                     <el-table :data="userList" style="width: 100%">
-                        <el-table-column prop="id" label="用户ID" width="80" ></el-table-column>
-                        <el-table-column prop="username" label="用户名" width="180" ></el-table-column>
-                        <el-table-column prop="email" label="邮箱" ></el-table-column>
-                        <el-table-column prop="department" label="部门" width="120" ></el-table-column>
-                        <el-table-column prop="create_time" label="创建时间" width="180" ></el-table-column>
-                        <el-table-column prop="status" label="状态" width="80">
+                        <el-table-column prop="id" label="User ID" width="80" ></el-table-column>
+                        <el-table-column prop="username" label="Username" width="180" ></el-table-column>
+                        <el-table-column prop="email" label="Email" ></el-table-column>
+                        <el-table-column prop="department" label="Department" width="120" ></el-table-column>
+                        <el-table-column prop="create_time" label="Creation Time" width="180" ></el-table-column>
+                        <el-table-column prop="status" label="Status" width="80">
                             <template #default="scope">
                                 <el-tag :type="scope.row.status === 'active' ? 'success' : 'danger'">
-                                    {{ scope.row.status === 'active' ? '激活' : '禁用' }}
+                                    {{ scope.row.status === 'active' ? 'Active' : 'Disabled' }}
                                 </el-tag>
                             </template>
                         </el-table-column>
@@ -43,8 +43,8 @@
             </el-main>
             <el-footer style="text-align: center;">
                 <div class="version-info">
-                    <p>应用版本: <span>{{ appVersion }}</span></p>
-                    <p>数据库版本: <span>{{ dbVersion }}</span></p>
+                    <p>Application Version: <span>{{ appVersion }}</span></p>
+                    <p>Database Version: <span>{{ dbVersion }}</span></p>
                 </div>
             </el-footer>
         </el-container>
@@ -57,10 +57,10 @@
         createApp({
             setup() {
                 const userList = ref([])
-                const appVersion = ref('加载中...')
-                const dbVersion = ref('加载中...')
+                const appVersion = ref('Loading...')
+                const dbVersion = ref('Loading...')
                 
-                // 获取用户列表
+                // Get user list
                 const fetchUsers = async () => {
                     try {
                         const response = await fetch('/api/accounts')
@@ -68,28 +68,28 @@
                         if (data.success) {
                             userList.value = data.data
                         } else {
-                            ElMessage.error('获取用户列表失败')
+                            ElMessage.error('Failed to get user list')
                         }
                     } catch (error) {
-                        ElMessage.error('网络请求错误')
+                        ElMessage.error('Network request error')
                         console.error('Error fetching users:', error)
                     }
                 }
                 
-                // 获取版本信息
+                // Get version information
                 const fetchVersionInfo = async () => {
                     try {
                         const response = await fetch('/api/')
                         const data = await response.json()
                         appVersion.value = data.app_version
-                        dbVersion.value = data.schema_sql_version || '未设置'
+                        dbVersion.value = data.schema_sql_version || 'Not set'
                     } catch (error) {
-                        ElMessage.warning('获取版本信息失败')
+                        ElMessage.warning('Failed to get version information')
                         console.error('Error fetching version info:', error)
                     }
                 }
                 
-                // 页面加载时获取数据
+                // Fetch data when the page is loaded
                 onMounted(() => {
                     fetchUsers()
                     fetchVersionInfo()

@@ -14,15 +14,15 @@ module "oke" {
   vcn_name                    = var.vcn_name
 
   # Bastion
-  create_bastion              = var.create_bastion
+  create_bastion              = false
   bastion_allowed_cidrs    = ["0.0.0.0/0"]
   bastion_user             = "opc"
   # Operator
-  create_operator                = var.create_operator
+  create_operator                = false
 
   # SSH
-  ssh_public_key  = local.ssh_public_key
-  ssh_private_key = sensitive(local.ssh_key_bundle_content)
+  ssh_public_key  = null
+  ssh_private_key = null
 
   # Cluster
   create_cluster          = true

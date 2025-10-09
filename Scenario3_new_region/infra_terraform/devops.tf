@@ -1,11 +1,13 @@
-resource oci_devops_deploy_environment oke_env {
+resource "oci_devops_deploy_environment" "oke_env" {
+  provider = oci.home
   cluster_id = module.oke.cluster_id
   deploy_environment_type = "OKE_CLUSTER"
   display_name            = "Demo-OKE-${var.region_abbreviation}-env"
   project_id = var.devops_project_ocid
 }
 
-resource oci_devops_deploy_pipeline deploy_pipeline {
+resource "oci_devops_deploy_pipeline" "deploy_pipeline" {
+  provider = oci.home
   deploy_pipeline_parameters {
     items {
       name          = "DB_SERVICE_NAME"
@@ -32,7 +34,8 @@ resource oci_devops_deploy_pipeline deploy_pipeline {
   project_id = var.devops_project_ocid
 }
 
-resource oci_devops_deploy_stage deploy_sql_stage {
+resource "oci_devops_deploy_stage" "deploy_sql_stage" {
+  provider = oci.home
   command_spec_deploy_artifact_id = var.devops_artifact_adb_sql_shell_ocid
   container_config {
     compartment_id        = var.compartment_ocid
@@ -62,7 +65,8 @@ resource oci_devops_deploy_stage deploy_sql_stage {
 }
 
 
-resource oci_devops_deploy_stage deploy_oke_stage {
+resource "oci_devops_deploy_stage" "deploy_oke_stage" {
+  provider = oci.home
   deploy_pipeline_id = oci_devops_deploy_pipeline.deploy_pipeline.id
   deploy_stage_predecessor_collection {
     items {

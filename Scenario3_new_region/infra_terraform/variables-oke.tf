@@ -6,14 +6,6 @@ variable "vcn_name" {
   type    = string
 }
 
-variable "create_bastion" { 
-  default = true 
-  }
-
-variable "create_operator" { 
-  default = true 
-  }
-
 variable "cluster_type" {
   description = "The cluster type. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengworkingwithenhancedclusters.htm>Working with Enhanced Clusters and Basic Clusters</a> for more information. NOTE: An Enhanced cluster is required for self-managed worker pools (mode != Node Pool)."
   type        = string

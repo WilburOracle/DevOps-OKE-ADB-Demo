@@ -3,6 +3,7 @@
 #*************************************
 variable "region" {
   description = "OCI Region"
+  default = "ap-tokyo-1"
   nullable    = false
 }
 
