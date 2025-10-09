@@ -6,7 +6,7 @@
 
 本项目展示了在Oracle云基础设施(OCI)上使用Terraform自动化部署资源和通过OCI DevOps实现CI/CD流水线，将应用程序部署到Oracle Kubernetes Engine (OKE)并连接到Autonomous Database (ADB)后端。
 
-![Solution Architecture](README.assets/solution.jpeg)
+![Solution Architecture](README.assets/solution_cn.jpeg)
 
 项目包含以下3个核心场景：
 
@@ -14,7 +14,7 @@
 
 本场景提供基础设施自动化部署方案，使用Terraform脚本一键创建Virtual Cloud Network (VCN)、Autonomous Database (ADB) 和Oracle Kubernetes Engine (OKE) 集群，并配置DevOps 部署流水线。
 
-![Scenario1_new_project](README.assets/Scenario1_new_project.jpeg)
+![Scenario1_new_project](README.assets/Scenario1_new_project_cn.jpeg)
 
 主要功能包括：
 - 自动创建云网络，并设置安全规则
@@ -29,7 +29,7 @@
 
 本场景展示如何利用已有的基础设施，通过OCI DevOps实现应用程序的持续集成和持续部署。
 
-![Scenario2_devops_cicd](README.assets/Scenario2_devops_cicd.jpeg)
+![Scenario2_devops_cicd](README.assets/Scenario2_devops_cicd_cn.jpeg)
 
 主要功能包括：
 - 基础的服务端应用代码(server目录)
@@ -44,7 +44,7 @@
 与场景1类似，本场景提供基础设施自动化部署方案，使用Terraform脚本一键创建Virtual Cloud Network (VCN)、Autonomous Database (ADB) 和Oracle Kubernetes Engine (OKE) 集群，并配置DevOps 部署流水线。
 与场景1不通的是，场景3不仅仅提供了基础设施，还用Terraform脚本部署了最新版本的数据库Schema和最新版本的应用。
 
-![Scenario3_new_region](README.assets/Scenario3_new_region.jpeg)
+![Scenario3_new_region](README.assets/Scenario3_new_region_cn.jpeg)
 
 主要功能包括：
 - 自动创建云网络，并设置安全规则

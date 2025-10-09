@@ -4,7 +4,7 @@
 
 This project demonstrates the complete process of automated resource deployment using Terraform on Oracle Cloud Infrastructure (OCI) and implementing CI/CD pipelines through OCI DevOps to deploy applications to Oracle Kubernetes Engine (OKE) connected to Autonomous Database (ADB) backend.
 
-![Solution Architecture](README.assets/solution.jpeg)
+![Solution Architecture](README.assets/solution_en.jpeg)
 
 The project includes the following 3 core scenarios:
 
@@ -12,7 +12,7 @@ The project includes the following 3 core scenarios:
 
 This scenario provides an automated infrastructure deployment solution, using Terraform scripts to create Virtual Cloud Network (VCN), Autonomous Database (ADB) and Oracle Kubernetes Engine (OKE) cluster with one click, and configure DevOps deployment pipeline.
 
-![Scenario1_new_project](README.assets/Scenario1_new_project.jpeg)
+![Scenario1_new_project](README.assets/Scenario1_new_project_en.jpeg)
 
 Main features include:
 - Automatically create cloud network and set security rules
@@ -27,7 +27,7 @@ One-click deployment:
 
 This scenario demonstrates how to leverage existing infrastructure to implement continuous integration and continuous deployment of applications through OCI DevOps.
 
-![Scenario2_devops_cicd](README.assets/Scenario2_devops_cicd.jpeg)
+![Scenario2_devops_cicd](README.assets/Scenario2_devops_cicd_en.jpeg)
 
 Main features include:
 - Basic server-side application code (server directory)
@@ -42,7 +42,7 @@ This scenario demonstrates how to quickly deploy a complete application environm
 Similar to Scenario 1, this scenario provides an automated infrastructure deployment solution, using Terraform scripts to create Virtual Cloud Network (VCN), Autonomous Database (ADB) and Oracle Kubernetes Engine (OKE) cluster with one click, and configure DevOps deployment pipeline.
 Unlike Scenario 1, Scenario 3 not only provides infrastructure but also deploys the latest version of database Schema and the latest version of the application using Terraform scripts.
 
-![Scenario3_new_region](README.assets/Scenario3_new_region.jpeg)
+![Scenario3_new_region](README.assets/Scenario3_new_region_en.jpeg)
 
 Main features include:
 - Automatically create cloud network and set security rules

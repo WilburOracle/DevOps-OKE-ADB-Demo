@@ -44,21 +44,21 @@ CREATE INDEX idx_accounts_status ON accounts(status);
 -- 插入初始版本信息
 INSERT INTO app_info (schema_sql_version) VALUES ('1.0.0');
 
--- 插入示例用户数据
+-- Insert sample user data
 INSERT INTO accounts (username, email, department, status) 
-VALUES ('admin', 'admin@example.com', '管理员', 'active');
+VALUES ('admin', 'admin@example.com', 'Administrator', 'active');
 
 INSERT INTO accounts (username, email, department, status) 
-VALUES ('user1', 'user1@example.com', '开发部', 'active');
+VALUES ('user1', 'user1@example.com', 'Development', 'active');
 
 INSERT INTO accounts (username, email, department, status) 
-VALUES ('user2', 'user2@example.com', '测试部', 'active');
+VALUES ('user2', 'user2@example.com', 'Testing', 'active');
 
 INSERT INTO accounts (username, email, department, status) 
-VALUES ('user3', 'user3@example.com', '运维部', 'active');
+VALUES ('user3', 'user3@example.com', 'Operations', 'active');
 
 INSERT INTO accounts (username, email, department, status) 
-VALUES ('user4', 'user4@example.com', '产品部', 'active');
+VALUES ('user4', 'user4@example.com', 'Product', 'active');
 
 -- 提交事务
 COMMIT;
